@@ -56,7 +56,7 @@ export default function InputArea({
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-md p-5 md:p-8 rounded-3xl border border-slate-700 shadow-2xl">
-      <div className="flex justify-between items-start mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
         <div>
           <h2 className="text-xl font-bold mb-2 text-blue-400">
             {activeTab === "single"

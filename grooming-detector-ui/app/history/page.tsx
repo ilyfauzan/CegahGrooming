@@ -144,7 +144,7 @@ export default function HistoryPage() {
                         {group.mode.toUpperCase()}
                       </span>
                     </div>
-                    <div className="text-[10px] font-black uppercase tracking-widest">
+                    <div className="text-[10px] font-black uppercase tracking-widest shrink-0 text-right">
                       Overall: <span className={
                         group.overallStatus === "GROOMING" ? "text-red-500" : 
                         group.overallStatus === "WARNING" ? "text-yellow-500" : "text-blue-400"
