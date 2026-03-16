@@ -252,13 +252,13 @@ export default function DetectorDashboard() {
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("single")}
-              className={`appearance-none px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === "single" ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "bg-slate-800 text-slate-400"}`}
+              className={`appearance-none px-5 py-2.5 rounded-xl text-[10px] font-black tracking-widest transition-all ${activeTab === "single" ? "bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/40" : "bg-slate-800 text-slate-500 hover:bg-slate-700 border border-slate-700/50"}`}
             >
               MODE 1: SINGLE
             </button>
             <button
               onClick={() => setActiveTab("window")}
-              className={`appearance-none px-4 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === "window" ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" : "bg-slate-800 text-slate-400"}`}
+              className={`appearance-none px-5 py-2.5 rounded-xl text-[10px] font-black tracking-widest transition-all ${activeTab === "window" ? "bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/40" : "bg-slate-800 text-slate-500 hover:bg-slate-700 border border-slate-700/50"}`}
             >
               MODE 2: WINDOW
             </button>

@@ -61,7 +61,14 @@ export default function InputArea({
     >
       <div className="flex flex-col items-center text-center mb-6 gap-4">
         <div>
-          <h2 className="text-xl md:text-2xl font-bold mb-2 text-blue-400">
+          <h2 
+            className="text-xl md:text-2xl font-black mb-2 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text [-webkit-background-clip:text] notranslate"
+            style={{ 
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              color: '#60a5fa' 
+            }}
+          >
             {activeTab === "single"
               ? "Analisis Kalimat"
               : "Analisis Alur Konteks"}
@@ -103,7 +110,7 @@ export default function InputArea({
       <button
         onClick={onAnalyze}
         disabled={loading}
-        className="appearance-none w-full mt-4 md:mt-6 bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-3"
+        className="appearance-none w-full mt-4 md:mt-6 bg-blue-600 bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 py-3 md:py-4 rounded-2xl font-black text-base md:text-lg active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-3 shadow-xl shadow-blue-900/20"
       >
         {loading ? (
           <>

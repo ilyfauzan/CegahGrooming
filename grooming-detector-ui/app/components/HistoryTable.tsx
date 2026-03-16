@@ -56,7 +56,7 @@ export default function HistoryTable({
         {activeTab === "window" && history.length > 0 && (
           <button
             onClick={downloadCSV}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-3 py-2 sm:py-1.5 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white border border-green-500/30 rounded-lg text-[10px] font-black transition-all transform active:scale-95"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 sm:py-2 bg-green-600/20 hover:bg-green-600 hover:bg-gradient-to-r hover:from-green-600 hover:to-emerald-600 text-green-400 hover:text-white border border-green-500/30 rounded-xl text-[10px] font-black transition-all transform active:scale-95 shadow-lg hover:shadow-green-900/20"
           >
             DOWNLOAD REPORT (CSV)
           </button>
