@@ -49,8 +49,8 @@ export default function HistoryTable({
 
   return (
     <div className="bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center p-5 md:p-6 border-b border-slate-700 bg-slate-800/80 gap-4">
-        <h3 className="font-bold text-slate-300 italic text-sm">
+      <div className="flex flex-col sm:flex-row justify-between items-center p-5 md:p-6 border-b border-slate-700 bg-slate-800/80 gap-4">
+        <h3 className="font-bold text-slate-300 italic text-sm text-center sm:text-left">
           Database Detection Log
         </h3>
         {activeTab === "window" && history.length > 0 && (
