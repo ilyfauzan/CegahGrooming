@@ -55,7 +55,10 @@ export default function InputArea({
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-md p-5 md:p-8 rounded-3xl border border-slate-700 shadow-2xl">
+    <div 
+      className="bg-slate-800/50 p-5 md:p-8 rounded-3xl border border-slate-700 shadow-2xl"
+      style={{ backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+    >
       <div className="flex flex-col items-center text-center mb-6 gap-4">
         <div>
           <h2 className="text-xl md:text-2xl font-bold mb-2 text-blue-400">
@@ -71,7 +74,10 @@ export default function InputArea({
           </p>
         </div>
         {activeTab === "window" && (
-          <label className="shrink-0 flex items-center gap-2 px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500 hover:text-blue-400">
+          <label 
+            className="shrink-0 flex items-center gap-2 px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500 hover:text-blue-400"
+            style={{ WebkitBackdropFilter: 'blur(4px)', backdropFilter: 'blur(4px)' }}
+          >
             <span className="text-[10px] font-bold uppercase tracking-widest">
               Upload .txt
             </span>
@@ -97,7 +103,7 @@ export default function InputArea({
       <button
         onClick={onAnalyze}
         disabled={loading}
-        className="appearance-none w-full mt-4 md:mt-6 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-3"
+        className="appearance-none w-full mt-4 md:mt-6 bg-blue-600 bg-gradient-to-r from-blue-600 to-indigo-600 py-3 md:py-4 rounded-2xl font-bold text-base md:text-lg active:scale-[0.98] disabled:opacity-50 transition-all flex items-center justify-center gap-3"
       >
         {loading ? (
           <>
