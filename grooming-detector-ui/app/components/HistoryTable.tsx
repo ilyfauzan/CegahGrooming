@@ -66,13 +66,13 @@ export default function HistoryTable({
         ref={scrollRef}
         className="max-h-[400px] overflow-auto scrollbar-thin scrollbar-thumb-slate-700 scroll-smooth"
       >
-        <div className="min-w-[450px] sm:min-w-[600px] md:min-w-0">
-          <table className="w-full text-left">
-          <thead className="sticky top-0 bg-slate-800 text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
+        <div className="min-w-0">
+          <table className="w-full text-left table-fixed">
+          <thead className="sticky top-0 bg-slate-800 text-[9px] sm:text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
             <tr>
-              <th className="p-4 sm:p-5 w-auto">Percakapan</th>
-              <th className="p-4 sm:p-5 text-center w-20 sm:w-28">Akurasi</th>
-              <th className="p-4 sm:p-5 text-center w-24 sm:w-32">Label</th>
+              <th className="p-3 sm:p-5 truncate">Percakapan</th>
+              <th className="p-3 sm:p-5 text-center w-16 sm:w-28">Skor</th>
+              <th className="p-3 sm:p-5 text-center w-20 sm:w-32">Label</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-700/50">
@@ -97,15 +97,15 @@ export default function HistoryTable({
                   key={i}
                   className="hover:bg-slate-700/30 transition-colors group"
                 >
-                  <td className="p-4 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed">
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed truncate">
                     "{h.text_input}"
                   </td>
-                  <td className="p-4 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
+                  <td className="p-3 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
                     {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}
                   </td>
-                  <td className="p-4 sm:p-5 text-center">
+                  <td className="p-3 sm:p-5 text-center">
                     <span
-                      className={`px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-black tracking-wider border ${badgeStyle}`}
+                      className={`px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black tracking-wider border ${badgeStyle}`}
                     >
                       {badgeLabel}
                     </span>
