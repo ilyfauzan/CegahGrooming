@@ -159,20 +159,31 @@ export default function DetectorDashboard() {
           return;
         }
 
-        // SMART SPLITTING: Pecah baris yang terlalu panjang (paragraf) menjadi kalimat
+        // SMART & HARD SPLITTING: Pecah baris yang terlalu panjang menjadi potongan yang bisa diproses AI
         const lines: string[] = [];
-        rawLines.forEach(line => {
-          if (line.length > 150) {
-            // Split berdasarkan tanda titik, seru, atau tanya yang diikuti spasi/akhir baris
-            const sentences = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter(s => s.trim() !== "");
-            if (sentences.length > 1) {
-              lines.push(...sentences);
+        rawLines.forEach((line) => {
+          // 1. Coba Smart Splitting (berdasarkan tanda baca)
+          let chunks = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter((s) => s.trim() !== "");
+
+          chunks.forEach((chunk) => {
+            // 2. Jika chunk masih terlalu panjang (> 250 char), lakukan Hard Splitting
+            if (chunk.length > 250) {
+              let remaining = chunk;
+              while (remaining.length > 250) {
+                // Cari spasi terakhir sebelum batas 250 karakter
+                let splitIdx = remaining.lastIndexOf(" ", 250);
+                
+                // Jika tidak ada spasi (kata super panjang), potong paksa di 250
+                if (splitIdx === -1) splitIdx = 250;
+                
+                lines.push(remaining.substring(0, splitIdx).trim());
+                remaining = remaining.substring(splitIdx).trim();
+              }
+              if (remaining) lines.push(remaining);
             } else {
-              lines.push(line);
+              lines.push(chunk);
             }
-          } else {
-            lines.push(line);
-          }
+          });
         });
 
         // RESET SEBELUM MULAI BATCH
