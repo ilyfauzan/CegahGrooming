@@ -8,7 +8,14 @@ export default function Navbar() {
   return (
     <nav className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-10 border-b border-slate-700 pb-4 md:pb-6 gap-3 md:gap-0">
       <div className="text-center md:text-left">
-        <h1 className="text-lg md:text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text text-transparent [-webkit-background-clip:text] notranslate">
+        <h1 
+          className="text-lg md:text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text [-webkit-background-clip:text] text-transparent notranslate"
+          style={{ 
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            color: '#60a5fa' // Fallback for browsers that don't support clip-text
+          }}
+        >
           Grooming Intelligence
         </h1>
       </div>
