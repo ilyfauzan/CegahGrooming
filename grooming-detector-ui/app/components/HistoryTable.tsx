@@ -64,9 +64,10 @@ export default function HistoryTable({
       </div>
       <div 
         ref={scrollRef}
-        className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scroll-smooth"
+        className="max-h-[400px] overflow-y-auto overflow-x-auto scrollbar-thin scrollbar-thumb-slate-700 scroll-smooth"
       >
-        <table className="w-full text-left">
+        <div className="min-w-[600px] md:min-w-0">
+          <table className="w-full text-left">
           <thead className="sticky top-0 bg-slate-800 text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
             <tr>
               <th className="p-5">Percakapan</th>
