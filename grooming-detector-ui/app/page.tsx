@@ -166,15 +166,15 @@ export default function DetectorDashboard() {
           let chunks = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter((s) => s.trim() !== "");
 
           chunks.forEach((chunk) => {
-            // 2. Jika chunk masih terlalu panjang (> 80 char), lakukan Hard Splitting
-            if (chunk.length > 80) {
+            // 2. Jika chunk masih terlalu panjang (> 250 char), lakukan Hard Splitting
+            if (chunk.length > 250) {
               let remaining = chunk;
-              while (remaining.length > 80) {
-                // Cari spasi terakhir sebelum batas 80 karakter
-                let splitIdx = remaining.lastIndexOf(" ", 80);
+              while (remaining.length > 250) {
+                // Cari spasi terakhir sebelum batas 250 karakter
+                let splitIdx = remaining.lastIndexOf(" ", 250);
                 
-                // Jika tidak ada spasi (kata super panjang), potong paksa di 80
-                if (splitIdx === -1) splitIdx = 80;
+                // Jika tidak ada spasi (kata super panjang), potong paksa di 250
+                if (splitIdx === -1) splitIdx = 250;
                 
                 lines.push(remaining.substring(0, splitIdx).trim());
                 remaining = remaining.substring(splitIdx).trim();
