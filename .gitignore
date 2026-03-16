@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.env
+
+# Models (Too large for GitHub)
+model*/
+model_bert/
+
+# Node (Frontend)
+node_modules/
+.next/
+out/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
