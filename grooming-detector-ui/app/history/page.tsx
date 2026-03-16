@@ -152,12 +152,21 @@ export default function HistoryPage() {
                     {group.items.map((item, idx) => (
                       <div key={idx} className="flex justify-between items-start gap-4 py-2 border-b border-slate-700/20 last:border-0 hover:bg-slate-800/20 px-2 rounded-lg transition-all">
                         <p className="text-xs text-slate-300 italic">"{item.text_input}"</p>
-                        <span className={`text-[9px] font-bold shrink-0 ${
-                          item.status === "GROOMING" ? "text-red-500/70" : 
-                          item.status === "WARNING" ? "text-yellow-500/70" : "text-slate-500"
-                        }`}>
-                          {(item.score * 100).toFixed(0)}%
-                        </span>
+                        <div className="flex items-center gap-3 shrink-0">
+                          <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-wider border ${
+                            item.status === "GROOMING" ? "bg-red-500/10 text-red-500/80 border-red-500/20" : 
+                            item.status === "WARNING" ? "bg-yellow-500/10 text-yellow-500/80 border-yellow-500/20" : 
+                            "bg-blue-500/10 text-blue-500/80 border-blue-500/20"
+                          }`}>
+                            {item.status}
+                          </span>
+                          <span className={`text-[9px] font-bold ${
+                            item.status === "GROOMING" ? "text-red-500/70" : 
+                            item.status === "WARNING" ? "text-yellow-500/70" : "text-slate-500"
+                          }`}>
+                            {(item.score * 100).toFixed(0)}%
+                          </span>
+                        </div>
                       </div>
                     ))}
                   </div>
