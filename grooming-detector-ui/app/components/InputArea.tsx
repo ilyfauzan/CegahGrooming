@@ -61,14 +61,7 @@ export default function InputArea({
     >
       <div className="flex flex-col items-center text-center mb-6 gap-4">
         <div>
-          <h2 
-            className="text-xl md:text-2xl font-black mb-2 bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text [-webkit-background-clip:text] notranslate"
-            style={{ 
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              color: '#60a5fa' 
-            }}
-          >
+          <h2 className="text-xl md:text-2xl font-black mb-2 premium-text-blue notranslate">
             {activeTab === "single"
               ? "Analisis Kalimat"
               : "Analisis Alur Konteks"}

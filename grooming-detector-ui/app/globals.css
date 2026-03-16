@@ -24,3 +24,34 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Premium Text Utilities with iOS Fallbacks */
+.premium-text-vibrant {
+  color: #60a5fa; /* Solid Blue Fallback */
+  display: inline-block; /* Helps with clipping */
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .premium-text-vibrant {
+    background: linear-gradient(90deg, #60a5fa 0%, #818cf8 50%, #a855f7 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+.premium-text-blue {
+  color: #60a5fa; /* Solid Blue Fallback */
+  display: inline-block;
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .premium-text-blue {
+    background: linear-gradient(90deg, #60a5fa, #818cf8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}

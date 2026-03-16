@@ -16,14 +16,7 @@ export default function Navbar() {
           />
         </div>
         <div className="text-left">
-          <h1 
-            className="text-lg md:text-2xl font-extrabold bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text [-webkit-background-clip:text] notranslate"
-            style={{ 
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              color: '#60a5fa' 
-            }}
-          >
+          <h1 className="text-lg md:text-2xl font-extrabold premium-text-vibrant notranslate">
             CegahGrooming
           </h1>
         </div>
