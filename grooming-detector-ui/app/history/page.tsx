@@ -105,15 +105,15 @@ export default function HistoryPage() {
             History Database Logs
           </h2>
           
-          <div className="flex gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {["ALL", "NORMAL", "WARNING", "GROOMING"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}
-                className={`px-3 py-1 rounded-lg text-[10px] font-black tracking-widest transition-all ${
+                className={`px-3 py-1.5 rounded-lg text-[9px] md:text-[10px] font-black tracking-widest transition-all ${
                   filterStatus === s 
-                  ? "bg-blue-600 text-white" 
-                  : "bg-slate-800 text-slate-500 hover:bg-slate-700"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" 
+                  : "bg-slate-800 text-slate-500 hover:bg-slate-700 border border-slate-700"
                 }`}
               >
                 {s}
