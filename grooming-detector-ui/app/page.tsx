@@ -207,7 +207,6 @@ export default function DetectorDashboard() {
           };
           setHistory((prev) => [...prev, historyEntry]);
 
-          // Berikan waktu sela 50ms agar browser sempat melakukan "Paint" (Gambar ulang) ke layar
           await new Promise((resolve) => setTimeout(resolve, 50));
 
           // 3. Simpan ke database
