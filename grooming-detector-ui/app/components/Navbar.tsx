@@ -7,11 +7,11 @@ export default function Navbar() {
 
   return (
     <nav className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-10 border-b border-slate-700 pb-4 md:pb-6 gap-3 md:gap-0">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 md:gap-4">
         <img 
           src="/logo.png" 
           alt="CegahGrooming Logo" 
-          className="w-10 h-10 md:w-12 md:h-12 object-contain"
+          className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0"
         />
         <div className="text-left">
           <h1 
