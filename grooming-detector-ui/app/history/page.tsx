@@ -66,6 +66,11 @@ export default function HistoryPage() {
 
   const groupData = (data: HistoryRecord[]) => {
     const groups: { [key: string]: GroupedHistory } = {};
+    const statusPriority: { [key: string]: number } = {
+      GROOMING: 3,
+      WARNING: 2,
+      NORMAL: 1,
+    };
 
     data.forEach((item) => {
       const bId = item.batch_id || "single_" + item.id;
@@ -79,10 +84,21 @@ export default function HistoryPage() {
           overallStatus: "NORMAL",
         };
       }
+      
       groups[bId].items.push(item);
-      if (item.score > groups[bId].maxScore) {
-        groups[bId].maxScore = item.score;
+
+      const currentPriority = statusPriority[item.status] || 0;
+      const groupPriority = statusPriority[groups[bId].overallStatus] || 0;
+
+      if (currentPriority > groupPriority) {
+        // 1. Prioritaskan status yang lebih parah (Grooming > Warning > Normal)
         groups[bId].overallStatus = item.status;
+        groups[bId].maxScore = item.score;
+      } else if (currentPriority === groupPriority) {
+        // 2. Jika status sama parahnya, ambil yang keyakinannya paling tinggi
+        if (item.score > groups[bId].maxScore) {
+          groups[bId].maxScore = item.score;
+        }
       }
     });
 
