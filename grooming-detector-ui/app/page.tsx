@@ -54,7 +54,8 @@ export default function DetectorDashboard() {
       try {
         // Reset memori di Backend Python
         const sessionId = getSessionId();
-        await fetch("http://localhost:8000/reset", {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+        await fetch(`${apiUrl}/reset`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ session_id: sessionId }),
@@ -85,11 +86,12 @@ export default function DetectorDashboard() {
 
     try {
       const sessionId = getSessionId();
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       let previousScoreRef = lastScoreRef.current;
 
       if (activeTab === "single") {
         // --- MODE SINGLE ---
-        const response = await fetch("http://localhost:8000/predict", {
+        const response = await fetch(`${apiUrl}/predict`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ text: inputText, session_id: sessionId }),
@@ -137,7 +139,7 @@ export default function DetectorDashboard() {
         lastScoreRef.current = aiData.score;
 
         // Reset memori AI di backend untuk mode single
-        await fetch("http://localhost:8000/reset", {
+        await fetch(`${apiUrl}/reset`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ session_id: sessionId }),
@@ -152,7 +154,7 @@ export default function DetectorDashboard() {
         }
 
         // RESET SEBELUM MULAI BATCH
-        await fetch("http://localhost:8000/reset", {
+        await fetch(`${apiUrl}/reset`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ session_id: sessionId }),
@@ -168,7 +170,7 @@ export default function DetectorDashboard() {
         let groomingFound = false;
 
         for (const line of lines) {
-          const response = await fetch("http://localhost:8000/predict", {
+          const response = await fetch(`${apiUrl}/predict`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ text: line, session_id: sessionId }),
@@ -229,7 +231,7 @@ export default function DetectorDashboard() {
       setInputText("");
     } catch (err) {
       console.error(err);
-      alert("Error: Pastikan Backend Python berjalan di localhost:8000");
+      alert(`Error: Pastikan Backend Python berjalan di ${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}`);
     } finally {
       setLoading(false);
     }
