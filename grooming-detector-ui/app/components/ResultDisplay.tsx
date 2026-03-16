@@ -81,7 +81,7 @@ export default function ResultDisplay({
                       text={`${((result.score || 0) * 100).toFixed(0)}%`}
                       strokeWidth={8}
                       styles={buildStyles({
-                        pathColor: result.status === "GROOMING" ? "#ef4444" : result.status === "WARNING" ? "#f59e0b" : "#60a5fa",
+                        pathColor: result.score >= 0.8 ? "#ef4444" : result.score >= 0.6 ? "#f59e0b" : "#60a5fa",
                         textColor: "#fff",
                         trailColor: "#1e293b",
                         pathTransitionDuration: 1.5,
@@ -91,6 +91,7 @@ export default function ResultDisplay({
                       <span className={`text-[10px] font-black uppercase tracking-widest ${config?.color}`}>
                         {result.status === "GROOMING" ? "DANGER" : result.status === "WARNING" ? "WARNING" : "NORMAL"}
                       </span>
+                      <span className="text-[8px] text-slate-500 font-bold uppercase mt-1">Grooming Risk</span>
                     </div>
                   </div>
                 </div>

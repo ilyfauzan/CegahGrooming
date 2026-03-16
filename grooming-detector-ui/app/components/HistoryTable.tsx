@@ -71,7 +71,7 @@ export default function HistoryTable({
           <thead className="sticky top-0 bg-slate-800 text-[9px] sm:text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
             <tr>
               <th className="p-3 sm:p-5 truncate">Percakapan</th>
-              <th className="p-3 sm:p-5 text-center w-16 sm:w-28">Skor</th>
+              <th className="p-3 sm:p-5 text-center w-20 sm:w-28">Risiko (%)</th>
               <th className="p-3 sm:p-5 text-center w-20 sm:w-32">Label</th>
             </tr>
           </thead>
@@ -101,7 +101,7 @@ export default function HistoryTable({
                     "{h.text_input}"
                   </td>
                   <td className="p-3 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
-                    {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}
+                    {typeof h.score === 'number' ? (h.score * 100).toFixed(0) : "0"}%
                   </td>
                   <td className="p-3 sm:p-5 text-center">
                     <span
