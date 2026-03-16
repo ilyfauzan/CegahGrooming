@@ -56,10 +56,10 @@ export default function ResultDisplay({
       {/* BOX ALERT GLOBAL - Removed as per instruction, hasAlert prop is also removed */}
 
       <div
-        className={`p-8 rounded-3xl border shadow-2xl sticky top-10 transition-all duration-700 bg-slate-800/50 border-slate-700`}
+        className={`p-5 md:p-8 rounded-3xl border shadow-2xl sticky top-10 transition-all duration-700 bg-slate-800/50 border-slate-700`}
       >
-        <div className="flex justify-between items-center mb-8">
-          <h3 className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-10 italic">
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-slate-500 text-[10px] md:text-xs font-black uppercase tracking-widest italic">
             Prediction Output
           </h3>
           {result?.isDropping && (

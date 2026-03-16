@@ -105,7 +105,7 @@ export default function HistoryTable({
                   </td>
                   <td className="p-5 text-center">
                     <span
-                      className={`px-3 py-1 rounded-lg text-[10px] font-black tracking-wider border ${badgeStyle}`}
+                      className={`px-3 py-1 rounded-lg text-[9px] md:text-[10px] font-black tracking-wider border ${badgeStyle}`}
                     >
                       {badgeLabel}
                     </span>
