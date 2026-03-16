@@ -55,7 +55,7 @@ export default function InputArea({
   };
 
   return (
-    <div className="bg-slate-800/50 backdrop-blur-md p-8 rounded-3xl border border-slate-700 shadow-2xl">
+    <div className="bg-slate-800/50 backdrop-blur-md p-5 md:p-8 rounded-3xl border border-slate-700 shadow-2xl">
       <div className="flex justify-between items-start mb-6">
         <div>
           <h2 className="text-xl font-bold mb-2 text-blue-400">
@@ -70,7 +70,7 @@ export default function InputArea({
               : "Input riwayat percakapan atau upload file untuk deteksi pola."}
           </p>
         </div>
-        <label className="group flex items-center gap-2 px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500">
+        <label className="shrink-0 flex items-center gap-2 px-3 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500">
           <span className="text-[10px] font-bold uppercase tracking-widest">
             Upload .txt
           </span>
