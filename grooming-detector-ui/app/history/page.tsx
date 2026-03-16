@@ -131,20 +131,20 @@ export default function HistoryPage() {
             ) : (
               filteredGroups.map((group) => (
                 <div key={group.batch_id} className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-slate-600 transition-all">
-                  <div className="p-4 bg-slate-900/30 flex justify-between items-center border-b border-slate-700/30">
-                    <div className="flex items-center gap-3">
-                      <span className={`w-2 h-2 rounded-full ${
+                  <div className="p-4 bg-slate-900/30 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-700/30 gap-3">
+                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${
                         group.overallStatus === "GROOMING" ? "bg-red-500" : 
                         group.overallStatus === "WARNING" ? "bg-yellow-500" : "bg-blue-500"
                       }`} />
-                      <span className="text-[10px] font-black text-slate-500 uppercase">
+                      <span className="text-[10px] font-black text-slate-500 uppercase whitespace-nowrap">
                         {new Date(group.timestamp).toLocaleString("id-ID")}
                       </span>
                       <span className="px-2 py-0.5 bg-slate-800 rounded text-[9px] font-bold text-slate-400">
                         {group.mode.toUpperCase()}
                       </span>
                     </div>
-                    <div className="text-[10px] font-black uppercase tracking-widest shrink-0 text-right">
+                    <div className="text-[10px] font-black uppercase tracking-widest self-end sm:self-auto">
                       Overall: <span className={
                         group.overallStatus === "GROOMING" ? "text-red-500" : 
                         group.overallStatus === "WARNING" ? "text-yellow-500" : "text-blue-400"
