@@ -70,17 +70,19 @@ export default function InputArea({
               : "Input riwayat percakapan atau upload file untuk deteksi pola."}
           </p>
         </div>
-        <label className="shrink-0 flex items-center gap-2 px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500 hover:text-blue-400">
-          <span className="text-[10px] font-bold uppercase tracking-widest">
-            Upload .txt
-          </span>
-          <input
-            type="file"
-            accept=".txt"
-            className="hidden"
-            onChange={handleFileUpload}
-          />
-        </label>
+        {activeTab === "window" && (
+          <label className="shrink-0 flex items-center gap-2 px-4 py-2 bg-slate-900/50 border border-slate-700 rounded-xl cursor-pointer hover:border-blue-500 transition-all text-slate-500 hover:text-blue-400">
+            <span className="text-[10px] font-bold uppercase tracking-widest">
+              Upload .txt
+            </span>
+            <input
+              type="file"
+              accept=".txt"
+              className="hidden"
+              onChange={handleFileUpload}
+            />
+          </label>
+        )}
       </div>
       <textarea
         className="w-full h-48 p-6 bg-slate-900/80 border border-slate-700/50 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none text-white font-mono placeholder:text-slate-600 resize-none"
