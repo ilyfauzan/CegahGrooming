@@ -115,6 +115,7 @@ export default function HistoryTable({
             })}
           </tbody>
         </table>
+      </div>
         {history.length === 0 && (
           <div className="p-10 text-center text-slate-500 text-xs italic">
             Belum ada riwayat deteksi.
