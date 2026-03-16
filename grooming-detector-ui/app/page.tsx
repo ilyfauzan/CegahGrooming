@@ -34,6 +34,7 @@ export default function DetectorDashboard() {
 
   // Ref untuk menyimpan skor terakhir sebagai acuan "isDropping"
   const lastScoreRef = useRef<number | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
 
   // 1. Fungsi untuk membuat/mengambil ID dari browser
   const getSessionId = () => {
@@ -83,6 +84,11 @@ export default function DetectorDashboard() {
   const analyzeGrooming = async () => {
     if (!inputText || loading) return;
     setLoading(true);
+
+    // Auto-scroll ke area hasil (ResultDisplay) saat analisis dimulai
+    setTimeout(() => {
+      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
 
     try {
       const sessionId = getSessionId();
@@ -273,7 +279,7 @@ export default function DetectorDashboard() {
           </div>
 
           {/* Sisi Kanan: Hasil Prediksi */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1" ref={resultRef}>
             <ResultDisplay result={result} activeTab={activeTab} />
           </div>
         </div>
