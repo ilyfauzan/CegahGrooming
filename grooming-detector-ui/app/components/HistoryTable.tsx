@@ -97,8 +97,29 @@ export default function HistoryTable({
                   key={i}
                   className="hover:bg-slate-700/30 transition-colors group"
                 >
-                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed truncate">
-                    "{h.text_input}"
+                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed">
+                    <div className="relative group/text">
+                      <p className="line-clamp-2 peer-checked:line-clamp-none overflow-hidden transition-all duration-300">
+                        "{h.text_input}"
+                      </p>
+                      {h.text_input.length > 100 && (
+                        <button 
+                          onClick={(e) => {
+                            const p = e.currentTarget.previousElementSibling;
+                            if (p?.classList.contains('line-clamp-2')) {
+                              p.classList.remove('line-clamp-2');
+                              e.currentTarget.innerText = 'Sembunyikan';
+                            } else {
+                              p?.classList.add('line-clamp-2');
+                              e.currentTarget.innerText = 'Selengkapnya';
+                            }
+                          }}
+                          className="text-[9px] font-black text-blue-500 hover:text-blue-400 mt-1 uppercase tracking-widest cursor-pointer"
+                        >
+                          Selengkapnya
+                        </button>
+                      )}
+                    </div>
                   </td>
                   <td className="p-3 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
                     {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}

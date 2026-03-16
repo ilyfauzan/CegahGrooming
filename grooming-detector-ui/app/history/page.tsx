@@ -151,7 +151,28 @@ export default function HistoryPage() {
                   <div className="p-4 space-y-2">
                     {group.items.map((item, idx) => (
                       <div key={idx} className="flex justify-between items-start gap-4 py-2 border-b border-slate-700/20 last:border-0 hover:bg-slate-800/20 px-2 rounded-lg transition-all">
-                        <p className="text-xs text-slate-300 italic">"{item.text_input}"</p>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs text-slate-300 italic line-clamp-2 transition-all duration-300">
+                            "{item.text_input}"
+                          </p>
+                          {item.text_input.length > 100 && (
+                            <button 
+                              onClick={(e) => {
+                                const p = e.currentTarget.previousElementSibling;
+                                if (p?.classList.contains('line-clamp-2')) {
+                                  p.classList.remove('line-clamp-2');
+                                  e.currentTarget.innerText = 'Sembunyikan';
+                                } else {
+                                  p?.classList.add('line-clamp-2');
+                                  e.currentTarget.innerText = 'Selengkapnya';
+                                }
+                              }}
+                              className="text-[8px] font-black text-blue-500 hover:text-blue-400 mt-1 uppercase tracking-widest"
+                            >
+                              Selengkapnya
+                            </button>
+                          )}
+                        </div>
                         <div className="flex items-center gap-3 shrink-0">
                           <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-wider border ${
                             item.status === "GROOMING" ? "bg-red-500/10 text-red-500/80 border-red-500/20" : 
