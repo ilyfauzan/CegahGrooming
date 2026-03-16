@@ -77,8 +77,8 @@ export default function ResultDisplay({
                   <div className="absolute inset-0 bg-red-500/10 rounded-full blur-3xl group-hover:bg-red-500/20 transition-all duration-500" />
                   <div className="relative">
                     <CircularProgressbar
-                      value={result.score * 100}
-                      text={`${(result.score * 100).toFixed(0)}%`}
+                      value={(result.score || 0) * 100}
+                      text={`${((result.score || 0) * 100).toFixed(0)}%`}
                       strokeWidth={8}
                       styles={buildStyles({
                         pathColor: result.status === "GROOMING" ? "#ef4444" : result.status === "WARNING" ? "#f59e0b" : "#60a5fa",
@@ -97,7 +97,7 @@ export default function ResultDisplay({
               </div>
             </div>
 
-            <div className="mb-6 p-4 rounded-2xl bg-slate-900/40 border {config?.border} transition-all space-y-4">
+            <div className={`mb-6 p-4 rounded-2xl bg-slate-900/40 border ${config?.border || ""} transition-all space-y-4`}>
               <p className={`text-[11px] font-bold tracking-tight ${config?.color}`}>
                 {config?.msg}
               </p>

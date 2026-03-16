@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # 2. Konfigurasi Model
-MODEL_PATH = "./model6"
+MODEL_PATH = "./"  # Diatur ke root untuk deployment Hugging Face
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"🚀 Loading model from {MODEL_PATH}...")

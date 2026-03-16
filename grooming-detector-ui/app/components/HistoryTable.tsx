@@ -19,7 +19,7 @@ export default function HistoryTable({
     const rows = history.map((h, index) => [
       index + 1,
       `"${h.text_input.replace(/"/g, '""')}"`,
-      h.score.toFixed(4),
+      typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000",
       h.status,
       new Date(h.created_at).toLocaleString("id-ID"),
     ]);
@@ -100,7 +100,7 @@ export default function HistoryTable({
                     "{h.text_input}"
                   </td>
                   <td className="p-5 font-mono text-slate-400 text-center text-xs">
-                    {h.score.toFixed(4)}
+                    {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}
                   </td>
                   <td className="p-5 text-center">
                     <span
