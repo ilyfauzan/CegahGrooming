@@ -108,7 +108,7 @@ export default function ResultDisplay({
                   <div className="space-y-1">
                     <div className="flex justify-between text-[8px] font-black text-slate-500 uppercase">
                       <span>Analisis Kalimat Tunggal</span>
-                      <span>{(result.standalone_score * 100).toFixed(0)}%</span>
+                      <span>{((result.standalone_score || 0) * 100).toFixed(0)}%</span>
                     </div>
                     <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div 
@@ -121,7 +121,7 @@ export default function ResultDisplay({
                   <div className="space-y-1">
                     <div className="flex justify-between text-[8px] font-black text-slate-500 uppercase">
                       <span>Analisis Alur (Konteks)</span>
-                      <span>{(result.context_score * 100).toFixed(0)}%</span>
+                      <span>{((result.context_score || 0) * 100).toFixed(0)}%</span>
                     </div>
                     <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden">
                       <div 
