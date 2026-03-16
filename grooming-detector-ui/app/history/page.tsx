@@ -96,7 +96,7 @@ export default function HistoryPage() {
   );
 
   return (
-    <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-4 md:p-10">
+    <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
         <Navbar />
 
