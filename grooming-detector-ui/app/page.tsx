@@ -152,12 +152,28 @@ export default function DetectorDashboard() {
         });
       } else {
         // --- MODE WINDOW (ALUR) ---
-        const lines = inputText.split("\n").filter((l) => l.trim() !== "");
-        if (lines.length === 0) {
+        const rawLines = inputText.split("\n").filter((l) => l.trim() !== "");
+        if (rawLines.length === 0) {
           alert("Silakan masukkan teks terlebih dahulu.");
           setLoading(false);
           return;
         }
+
+        // SMART SPLITTING: Pecah baris yang terlalu panjang (paragraf) menjadi kalimat
+        const lines: string[] = [];
+        rawLines.forEach(line => {
+          if (line.length > 150) {
+            // Split berdasarkan tanda titik, seru, atau tanya yang diikuti spasi/akhir baris
+            const sentences = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter(s => s.trim() !== "");
+            if (sentences.length > 1) {
+              lines.push(...sentences);
+            } else {
+              lines.push(line);
+            }
+          } else {
+            lines.push(line);
+          }
+        });
 
         // RESET SEBELUM MULAI BATCH
         await fetch(`${apiUrl}/reset`, {
