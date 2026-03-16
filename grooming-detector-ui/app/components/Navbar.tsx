@@ -7,12 +7,14 @@ export default function Navbar() {
 
   return (
     <nav className="flex flex-col md:flex-row justify-between items-center mb-6 md:mb-10 border-b border-slate-700 pb-4 md:pb-6 gap-3 md:gap-0">
-      <div className="flex items-center gap-3 md:gap-4">
-        <img 
-          src="/logo.png" 
-          alt="CegahGrooming Logo" 
-          className="w-12 h-12 md:w-16 md:h-16 object-contain shrink-0"
-        />
+      <div className="flex items-center gap-2 md:gap-3">
+        <div className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center overflow-hidden">
+          <img 
+            src="/logo.png" 
+            alt="CegahGrooming Logo" 
+            className="w-full h-full object-contain shrink-0 scale-[2.2] md:scale-[2.5]" 
+          />
+        </div>
         <div className="text-left">
           <h1 
             className="text-lg md:text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-500 bg-clip-text [-webkit-background-clip:text] text-transparent notranslate"
