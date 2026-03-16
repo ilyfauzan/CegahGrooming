@@ -38,6 +38,12 @@ export default function HistoryPage() {
     // Ambil session_id untuk privasi (Level 1)
     const sessionId = typeof window !== "undefined" ? localStorage.getItem("chat_session_id") : null;
 
+    if (!supabase) {
+      console.warn("Supabase is missing or invalid URL.");
+      setLoading(false);
+      return;
+    }
+
     let query = supabase
       .from("history_detection")
       .select("*")
