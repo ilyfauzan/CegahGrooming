@@ -181,12 +181,18 @@ export default function HistoryPage() {
                           }`}>
                             {item.status}
                           </span>
-                          <span className={`text-[9px] font-bold ${
-                            item.status === "GROOMING" ? "text-red-500/70" : 
-                            item.status === "WARNING" ? "text-yellow-500/70" : "text-slate-500"
-                          }`}>
-                            {(item.score * 100).toFixed(0)}%
-                          </span>
+                          <div className="flex flex-col items-end min-w-[60px]">
+                            <span className={`text-[10px] font-bold ${
+                              item.status === "GROOMING" ? "text-red-500/70" : 
+                              item.status === "WARNING" ? "text-yellow-500/70" : "text-slate-500"
+                            }`}>
+                              {(item.score * 100).toFixed(0)}%
+                            </span>
+                            {/* Rincian Skor Asli untuk Bukti Skripsi */}
+                            <span className="text-[7px] text-slate-600 font-mono text-right">
+                              S:{( (item as any).standalone_score || 0) * 100}% C:{( (item as any).context_score || 0) * 100}%
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
