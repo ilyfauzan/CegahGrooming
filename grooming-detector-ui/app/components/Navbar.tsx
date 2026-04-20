@@ -26,13 +26,19 @@ export default function Navbar() {
           href="/" 
           className={`text-[11px] md:text-xs font-bold uppercase tracking-widest transition-all ${pathname === "/" ? "text-blue-400" : "text-slate-400 hover:text-white"}`}
         >
-          Detector
+          Beranda
+        </Link>
+        <Link 
+          href="/detector" 
+          className={`text-[11px] md:text-xs font-bold uppercase tracking-widest transition-all ${pathname === "/detector" ? "text-blue-400" : "text-slate-400 hover:text-white"}`}
+        >
+          Alat Deteksi
         </Link>
         <Link 
           href="/history" 
           className={`text-[11px] md:text-xs font-bold uppercase tracking-widest transition-all ${pathname === "/history" ? "text-blue-400" : "text-slate-400 hover:text-white"}`}
         >
-          History Log
+          Riwayat Log
         </Link>
       </div>
     </nav>
