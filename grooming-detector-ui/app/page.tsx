@@ -11,9 +11,9 @@ export default function LandingPage() {
       color: "bg-blue-500/20 text-blue-400"
     },
     {
-      title: "Hybrid Scoring",
-      desc: "Gabungan analisis kalimat tunggal dan alur konteks (50:50) untuk akurasi tinggi.",
-      icon: "⚖️",
+      title: "Pemantau Alur",
+      desc: "Sistem tidak hanya melihat satu pesan saja, tapi juga memantau jalannya percakapan secara utuh.",
+      icon: "📱",
       color: "bg-indigo-500/20 text-indigo-400"
     },
     {
