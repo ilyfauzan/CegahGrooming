@@ -172,13 +172,56 @@ export default function DetectorDashboard() {
     }
   };
 
+  // 3. Fungsi Reset Konteks (Manual)
+  const handleResetContext = async () => {
+    if (loading) return;
+    if (history.length === 0 && !inputText) return;
+    
+    if (!confirm("Apakah Anda yakin ingin menghapus seluruh riwayat dan memulai sesi baru?")) return;
+
+    try {
+      const sessionId = getSessionId();
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      
+      await fetch(`${apiUrl}/reset`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ session_id: sessionId }),
+      });
+
+      // Reset Frontend State
+      setHistory([]);
+      setResult(null);
+      setHasAlert(false);
+      setInputText("");
+      lastScoreRef.current = null;
+      
+    } catch (err) {
+      console.error("Gagal reset konteks:", err);
+      alert("Gagal mereset konteks. Pastikan backend berjalan.");
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
         <Navbar />
 
+        {/* CONTROLS */}
+        <div className="mt-8 flex flex-col md:flex-row justify-end items-center gap-4">
+          <button
+            onClick={handleResetContext}
+            className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-red-500/10 border border-slate-700 hover:border-red-500/50 rounded-xl text-slate-500 hover:text-red-400 text-[10px] font-black tracking-widest transition-all active:scale-95 group"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            BERSIHKAN KONTEKS
+          </button>
+        </div>
+
         {/* Unified Layout */}
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <InputArea
               inputText={inputText}
