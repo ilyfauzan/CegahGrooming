@@ -51,23 +51,12 @@ export default function LandingPage() {
           ))}
         </div>
 
-        {/* Thesis Attribution */}
-        <div className="py-10 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-6">
-          <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest italic">
-            Thesis Project &copy; {new Date().getFullYear()}
+        {/* Footer */}
+        <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
+          <p className="text-slate-500 text-[10px] md:text-xs font-medium tracking-widest uppercase opacity-60">
+            &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System
           </p>
-          <div className="flex gap-4">
-             <div className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-[9px] font-black text-slate-600 uppercase tracking-tighter">
-                BERT-Based Grooming Detection
-             </div>
-             <div className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-[9px] font-black text-slate-600 uppercase tracking-tighter">
-                FastAPI Backend
-             </div>
-             <div className="px-3 py-1 bg-slate-900 border border-slate-800 rounded-lg text-[9px] font-black text-slate-600 uppercase tracking-tighter">
-                Next.js Frontend
-             </div>
-          </div>
-        </div>
+        </footer>
       </div>
     </main>
   );

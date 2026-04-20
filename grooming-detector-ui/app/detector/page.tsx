@@ -237,6 +237,13 @@ export default function DetectorDashboard() {
             <ResultDisplay result={result} />
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
+          <p className="text-slate-500 text-[10px] md:text-xs font-medium tracking-widest uppercase opacity-60">
+            &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System
+          </p>
+        </footer>
       </div>
     </main>
   );
