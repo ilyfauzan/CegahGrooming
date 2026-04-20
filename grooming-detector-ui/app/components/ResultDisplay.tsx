@@ -2,7 +2,7 @@
 import React from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { DetectionResult } from "../page";
+import { DetectionResult } from "../detector/page";
 
 interface ResultDisplayProps {
   result: DetectionResult | null;
