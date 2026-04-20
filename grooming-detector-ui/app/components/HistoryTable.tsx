@@ -3,15 +3,12 @@ import { useEffect, useRef } from "react";
 
 interface HistoryTableProps {
   history: any[];
-  activeTab: "single" | "window";
 }
 
 export default function HistoryTable({
   history,
-  activeTab,
 }: HistoryTableProps) {
   const downloadCSV = () => {
-    if (activeTab !== "window") return;
     if (history.length === 0)
       return alert("Tidak ada data riwayat untuk diunduh.");
 
@@ -53,7 +50,7 @@ export default function HistoryTable({
         <h3 className="font-bold text-slate-300 italic text-sm text-center sm:text-left">
           Database Detection Log
         </h3>
-        {activeTab === "window" && history.length > 0 && (
+        {history.length > 0 && (
           <button
             onClick={downloadCSV}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 sm:py-2 bg-green-600/20 hover:bg-green-600 hover:bg-gradient-to-r hover:from-green-600 hover:to-emerald-600 text-green-400 hover:text-white border border-green-500/30 rounded-xl text-[10px] font-black transition-all transform active:scale-95 shadow-lg hover:shadow-green-900/20"
@@ -62,81 +59,81 @@ export default function HistoryTable({
           </button>
         )}
       </div>
-      <div 
+      <div
         ref={scrollRef}
         className="max-h-[400px] overflow-auto scrollbar-thin scrollbar-thumb-slate-700 scroll-smooth"
       >
         <div className="min-w-0">
           <table className="w-full text-left table-fixed">
-          <thead className="sticky top-0 bg-slate-800 text-[9px] sm:text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
-            <tr>
-              <th className="p-3 sm:p-5 truncate">Percakapan</th>
-              <th className="p-3 sm:p-5 text-center w-20 sm:w-28">Akurasi</th>
-              <th className="p-3 sm:p-5 text-center w-20 sm:w-32">Label</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-700/50">
-            {history.map((h, i) => {
-              // LOGIKA PENENTUAN BADGE (Sinkron dengan Backend Tanpa Threshold)
-              let badgeStyle = "";
-              let badgeLabel = "";
+            <thead className="sticky top-0 bg-slate-800 text-[9px] sm:text-[10px] uppercase text-slate-500 font-black shadow-sm z-10">
+              <tr>
+                <th className="p-3 sm:p-5 truncate">Percakapan</th>
+                <th className="p-3 sm:p-5 text-center w-20 sm:w-28">Akurasi</th>
+                <th className="p-3 sm:p-5 text-center w-20 sm:w-32">Label</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-700/50">
+              {history.map((h, i) => {
+                // LOGIKA PENENTUAN BADGE (Sinkron dengan Backend Tanpa Threshold)
+                let badgeStyle = "";
+                let badgeLabel = "";
 
-              if (h.status === "GROOMING") {
-                badgeStyle = "bg-red-500/20 text-red-400 border-red-500/30";
-                badgeLabel = "DANGER";
-              } else if (h.status === "WARNING") {
-                badgeStyle = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
-                badgeLabel = "WARNING";
-              } else {
-                badgeStyle = "bg-blue-500/20 text-blue-400 border-blue-500/30";
-                badgeLabel = "NORMAL";
-              }
+                if (h.status === "GROOMING") {
+                  badgeStyle = "bg-red-500/20 text-red-400 border-red-500/30";
+                  badgeLabel = "DANGER";
+                } else if (h.status === "WARNING") {
+                  badgeStyle = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+                  badgeLabel = "WARNING";
+                } else {
+                  badgeStyle = "bg-blue-500/20 text-blue-400 border-blue-500/30";
+                  badgeLabel = "NORMAL";
+                }
 
-              return (
-                <tr
-                  key={i}
-                  className="hover:bg-slate-700/30 transition-colors group"
-                >
-                  <td className="p-3 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed">
-                    <div className="relative group/text">
-                      <p className="line-clamp-2 peer-checked:line-clamp-none overflow-hidden transition-all duration-300">
-                        "{h.text_input}"
-                      </p>
-                      {h.text_input.length > 100 && (
-                        <button 
-                          onClick={(e) => {
-                            const p = e.currentTarget.previousElementSibling;
-                            if (p?.classList.contains('line-clamp-2')) {
-                              p.classList.remove('line-clamp-2');
-                              e.currentTarget.innerText = 'Sembunyikan';
-                            } else {
-                              p?.classList.add('line-clamp-2');
-                              e.currentTarget.innerText = 'Selengkapnya';
-                            }
-                          }}
-                          className="text-[9px] font-black text-blue-500 hover:text-blue-400 mt-1 uppercase tracking-widest cursor-pointer"
-                        >
-                          Selengkapnya
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-3 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
-                    {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}
-                  </td>
-                  <td className="p-3 sm:p-5 text-center">
-                    <span
-                      className={`px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black tracking-wider border ${badgeStyle}`}
-                    >
-                      {badgeLabel}
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                return (
+                  <tr
+                    key={i}
+                    className="hover:bg-slate-700/30 transition-colors group"
+                  >
+                    <td className="p-3 sm:p-5 text-xs sm:text-sm text-slate-300 italic leading-relaxed">
+                      <div className="relative group/text">
+                        <p className="line-clamp-2 peer-checked:line-clamp-none overflow-hidden transition-all duration-300">
+                          "{h.text_input}"
+                        </p>
+                        {h.text_input.length > 100 && (
+                          <button
+                            onClick={(e) => {
+                              const p = e.currentTarget.previousElementSibling;
+                              if (p?.classList.contains('line-clamp-2')) {
+                                p.classList.remove('line-clamp-2');
+                                e.currentTarget.innerText = 'Sembunyikan';
+                              } else {
+                                p?.classList.add('line-clamp-2');
+                                e.currentTarget.innerText = 'Selengkapnya';
+                              }
+                            }}
+                            className="text-[9px] font-black text-blue-500 hover:text-blue-400 mt-1 uppercase tracking-widest cursor-pointer"
+                          >
+                            Selengkapnya
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-3 sm:p-5 font-mono text-slate-400 text-center text-[10px] sm:text-xs">
+                      {typeof h.score === 'number' ? h.score.toFixed(4) : "0.0000"}
+                    </td>
+                    <td className="p-3 sm:p-5 text-center">
+                      <span
+                        className={`px-2 py-0.5 rounded-lg text-[8px] md:text-[10px] font-black tracking-wider border ${badgeStyle}`}
+                      >
+                        {badgeLabel}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
         {history.length === 0 && (
           <div className="p-10 text-center text-slate-500 text-xs italic">
             Belum ada riwayat deteksi.

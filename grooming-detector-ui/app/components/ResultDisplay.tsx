@@ -6,12 +6,10 @@ import { DetectionResult } from "../page";
 
 interface ResultDisplayProps {
   result: DetectionResult | null;
-  activeTab?: "single" | "window";
 }
 
 export default function ResultDisplay({
   result,
-  activeTab,
 }: ResultDisplayProps) {
   const getRangeConfig = (status: string, score: number) => {
     // 1. KONDISI DANGER: Jika status murni dari Backend adalah GROOMING
@@ -102,8 +100,8 @@ export default function ResultDisplay({
                 {config?.msg}
               </p>
               
-              {/* BREAKDOWN SKOR HYBRID - Hanya muncul di Mode Window */}
-              {result && activeTab === "window" && (
+              {/* BREAKDOWN SKOR HYBRID - Muncul jika ada analisis konteks */}
+              {result && result.context_score > 0 && (
                 <div className="pt-2 border-t border-slate-700/50 space-y-3">
                   <div className="space-y-1">
                     <div className="flex justify-between text-[8px] font-black text-slate-500 uppercase">
