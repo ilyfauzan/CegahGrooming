@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export default function Hero() {
   return (
-    <div className="relative overflow-hidden py-16 md:py-24">
+    <div className="relative overflow-hidden py-4 md:py-8">
       {/* Background Blobs for Decoration */}
       <div className="absolute top-0 -left-4 w-72 h-72 bg-blue-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
       <div className="absolute top-0 -right-4 w-72 h-72 bg-indigo-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
       <div className="absolute -bottom-8 left-20 w-72 h-72 bg-violet-600 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000" />
 
-      <div className="relative text-center space-y-12 max-w-4xl mx-auto px-6">
+      <div className="relative text-center space-y-8 max-w-4xl mx-auto px-6">
         <div className="inline-block px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] animate-fade-in">
           Sistem Deteksi Grooming Berbasis AI
         </div>
