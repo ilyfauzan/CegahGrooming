@@ -32,7 +32,7 @@ export default function LandingPage() {
         <Hero />
 
         {/* Features Grid */}
-        <div className="pb-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="pb-24 grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((f, i) => (
             <div 
               key={i} 
