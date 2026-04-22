@@ -20,10 +20,9 @@ export default function Hero() {
         </h1>
         
         <p className="text-slate-400 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
-          Platform deteksi manipulasi komunikasi pertama yang mengombinasikan Model 
-          <span className="text-slate-200 font-bold"> BERT </span> dengan algoritma 
-          <span className="text-blue-400 font-bold"> Hybrid Scoring </span> untuk akurasi terbaik 
-          dalam mendeteksi pola predator seksual online.
+          Platform deteksi dini ancaman <span className="text-slate-200 font-bold"> online grooming </span> 
+          berbasis <span className="text-blue-400 font-bold"> AI </span> untuk memberikan perlindungan 
+          komunikasi digital secara cerdas dan real-time.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
