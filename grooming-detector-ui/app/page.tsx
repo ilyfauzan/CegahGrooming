@@ -25,14 +25,14 @@ export default function LandingPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10 selection:bg-blue-500/30 overflow-x-hidden">
+    <main className="bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10 selection:bg-blue-500/30 overflow-x-hidden">
       <div className="max-w-6xl mx-auto">
         <Navbar />
         
         <Hero />
 
         {/* Features Grid */}
-        <div className="py-20 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="pb-20 grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((f, i) => (
             <div 
               key={i} 
@@ -52,7 +52,7 @@ export default function LandingPage() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
+        <footer className="mt-10 py-8 border-t border-slate-800/50 text-center">
           <p className="text-slate-500 text-[10px] md:text-xs font-medium tracking-widest uppercase opacity-60">
             &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System
           </p>
