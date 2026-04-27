@@ -101,11 +101,31 @@ async def predict(data: ChatInput):
         words = set(text.lower().split())
         return len(words.intersection(english_words)) > 0
 
+    # 1. Terjemahkan teks jika bukan bahasa Inggris
+    def preprocess_text(t):
+        t = t.lower().strip()
+        # Perbaikan manual untuk frase yang sering salah
+        mappings = {
+            "boleh ya": "boleh ya?",
+            "bisa ya": "bisa ya?",
+            "janji ya": "janji ya?",
+            "ngapain": "sedang apa",
+            "udah": "sudah"
+        }
+        for k, v in mappings.items():
+            if t == k: t = v
+        return t
+
+    text_to_translate = preprocess_text(data.text)
+
     try:
-        if is_english(data.text):
-            translated_text = data.text
+        if is_english(text_to_translate):
+            translated_text = text_to_translate
         else:
-            translated_text = translator.translate(data.text)
+            translated_text = translator.translate(text_to_translate)
+            # Fix manual hasil terjemahan yang aneh
+            if translated_text.lower() == "yes, yes":
+                translated_text = "May I?"
     except Exception as e:
         print(f"Translation error: {e}")
         translated_text = data.text
