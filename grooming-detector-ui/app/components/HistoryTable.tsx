@@ -80,7 +80,7 @@ export default function HistoryTable({
 
                 if (h.status === "GROOMING") {
                   badgeStyle = "bg-red-500/20 text-red-400 border-red-500/30";
-                  badgeLabel = "DANGER";
+                  badgeLabel = "GROOMING";
                 } else if (h.status === "WARNING") {
                   badgeStyle = "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
                   badgeLabel = "WARNING";

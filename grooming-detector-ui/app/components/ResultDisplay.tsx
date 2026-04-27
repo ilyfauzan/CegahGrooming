@@ -12,10 +12,10 @@ export default function ResultDisplay({
   result,
 }: ResultDisplayProps) {
   const getRangeConfig = (status: string, score: number) => {
-    // 1. KONDISI DANGER: Jika status murni dari Backend adalah GROOMING
+    // 1. KONDISI GROOMING: Jika status murni dari Backend adalah GROOMING
     if (status === "GROOMING") {
       return {
-        label: "DANGER",
+        label: "GROOMING",
         color: "text-red-500",
         stroke: "stroke-red-500",
         bg: "bg-red-950/20",
@@ -87,7 +87,7 @@ export default function ResultDisplay({
                     />
                     <div className="absolute inset-0 flex flex-col items-center justify-center pt-16">
                       <span className={`text-[10px] font-black uppercase tracking-widest ${config?.color}`}>
-                        {result.status === "GROOMING" ? "DANGER" : result.status === "WARNING" ? "WARNING" : "NORMAL"}
+                        {result.status === "GROOMING" ? "GROOMING" : result.status === "WARNING" ? "WARNING" : "NORMAL"}
                       </span>
                     </div>
                   </div>
