@@ -64,22 +64,22 @@ export default function ResultSidebar({ items }: ResultSidebarProps) {
         <div className="flex flex-col items-center">
           <div className="w-full max-w-[200px] mb-6">
             <div className="relative group">
-              <div className="absolute inset-0 rounded-full blur-3xl opacity-20" style={{ backgroundColor: config.path }} />
+              <div className="absolute inset-0 rounded-full blur-3xl opacity-20" style={{ backgroundColor: colorMap[latestItem?.status || "NORMAL"].path }} />
               <div className="relative">
                 <CircularProgressbar
-                  value={highestScore * 100}
-                  text={`${(highestScore * 100).toFixed(0)}%`}
+                  value={(latestItem?.score || 0) * 100}
+                  text={`${((latestItem?.score || 0) * 100).toFixed(0)}%`}
                   strokeWidth={8}
                   styles={buildStyles({
-                    pathColor: config.path,
+                    pathColor: colorMap[latestItem?.status || "NORMAL"].path,
                     textColor: "#fff",
                     trailColor: "#1e293b",
-                    pathTransitionDuration: 1.5,
+                    pathTransitionDuration: 0.5,
                   })}
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center pt-14">
-                  <span className={`text-[9px] font-black uppercase tracking-widest ${config.text}`}>
-                    Skor Tertinggi
+                  <span className={`text-[9px] font-black uppercase tracking-widest ${colorMap[latestItem?.status || "NORMAL"].text}`}>
+                    Skor Pesan
                   </span>
                 </div>
               </div>

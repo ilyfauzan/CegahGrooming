@@ -134,14 +134,7 @@ export default function ChatBubbleList({ items, onAppend, loading }: ChatBubbleL
                     <span className={`font-mono font-black ${config.labelColor}`}>{(item.score * 100).toFixed(1)}%</span>
                   </div>
 
-                  {/* Teks terjemahan */}
-                  {item.translated && (
-                    <div className="mt-2 pt-2 border-t border-slate-700/30">
-                      <p className="text-[10px] text-slate-600 italic">
-                        Terjemahan: &quot;{item.translated}&quot;
-                      </p>
-                    </div>
-                  )}
+
                 </div>
               )}
 
