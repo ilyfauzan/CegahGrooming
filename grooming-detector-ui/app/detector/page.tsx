@@ -49,7 +49,7 @@ export default function DetectorDashboard() {
       const batchId = "det_" + Math.random().toString(36).substring(2, 9);
 
       // SMART SPLITTING: pecah baris yang terlalu panjang
-      const lines: string[] = [];
+      const rawLines: string[] = [];
       messages.forEach((line) => {
         const chunks = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter((s) => s.trim() !== "");
         chunks.forEach((chunk) => {
@@ -58,15 +58,20 @@ export default function DetectorDashboard() {
             while (remaining.length > 250) {
               let splitIdx = remaining.lastIndexOf(" ", 250);
               if (splitIdx === -1) splitIdx = 250;
-              lines.push(remaining.substring(0, splitIdx).trim());
+              rawLines.push(remaining.substring(0, splitIdx).trim());
               remaining = remaining.substring(splitIdx).trim();
             }
-            if (remaining) lines.push(remaining);
+            if (remaining) rawLines.push(remaining);
           } else {
-            lines.push(chunk);
+            rawLines.push(chunk);
           }
         });
       });
+
+      // Bersihkan sisa tanda petik dan koma di akhir setelah splitting
+      const lines = rawLines
+        .map((l) => l.replace(/^["']+/, "").replace(/["']+$/, "").replace(/,\s*$/, "").trim())
+        .filter((l) => l !== "");
 
       // Langsung tampilkan UI hasil (bubble akan muncul satu per satu)
       setView("results");
