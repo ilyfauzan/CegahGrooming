@@ -87,29 +87,42 @@ export default function HistoryPage() {
     ));
   };
 
-  const filteredGroups = historyGroups.filter(g => 
-    filterStatus === "ALL" || g.overallStatus === filterStatus
-  );
+  const removeGroupLocally = (batchId: string) => {
+    if (confirm("Hapus log ini dari tampilan? (Data di database tetap ada)")) {
+      setHistoryGroups(prev => prev.filter(g => g.batch_id !== batchId));
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    if (status === "GROOMING") return "text-red-400 border-red-500/50 bg-red-500/10";
+    if (status === "WARNING") return "text-yellow-400 border-yellow-500/50 bg-yellow-500/10";
+    return "text-blue-400 border-blue-500/30 bg-blue-500/10";
+  };
 
   return (
     <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
         <Navbar />
 
-        <div className="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
-          <h2 className="text-xl font-bold text-slate-400 uppercase tracking-widest">
-            History Database Logs
-          </h2>
+        <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-black premium-text-blue notranslate uppercase tracking-tighter">
+              Riwayat Analisis
+            </h2>
+            <p className="text-xs text-slate-500 font-medium mt-2 uppercase tracking-widest">
+              Log percakapan yang tersimpan di database
+            </p>
+          </div>
           
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap gap-2">
             {["ALL", "NORMAL", "WARNING", "GROOMING"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}
-                className={`px-3 py-1.5 rounded-lg text-[9px] md:text-[10px] font-black tracking-widest transition-all ${
+                className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all ${
                   filterStatus === s 
                   ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" 
-                  : "bg-slate-800 text-slate-500 hover:bg-slate-700 border border-slate-700"
+                  : "bg-slate-800/50 text-slate-500 hover:bg-slate-800 border border-slate-700"
                 }`}
               >
                 {s}
@@ -119,86 +132,80 @@ export default function HistoryPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 animate-pulse text-slate-500">Loading history...</div>
+          <div className="flex flex-col items-center justify-center py-40 gap-4">
+            <div className="w-10 h-10 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin" />
+            <div className="text-[10px] font-black text-slate-600 uppercase tracking-widest">Memuat database...</div>
+          </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-12">
             {filteredGroups.length === 0 ? (
-              <div className="text-center py-20 text-slate-600 italic">No history found with current filters.</div>
+              <div className="text-center py-40">
+                <p className="text-slate-600 italic font-medium text-sm">Tidak ada riwayat ditemukan.</p>
+              </div>
             ) : (
               filteredGroups.map((group) => (
-                <div key={group.batch_id} className="bg-slate-800/40 border border-slate-700/50 rounded-2xl overflow-hidden hover:border-slate-600 transition-all">
-                  <div className="p-4 bg-slate-900/30 flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-700/30 gap-3">
-                    <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${
-                        group.overallStatus === "GROOMING" ? "bg-red-500" : 
-                        group.overallStatus === "WARNING" ? "bg-yellow-500" : "bg-blue-500"
-                      }`} />
-                      <span className="text-[10px] font-black text-slate-500 uppercase whitespace-nowrap">
-                        {new Date(group.timestamp).toLocaleString("id-ID")}
-                      </span>
-                      <span className="px-2 py-0.5 bg-slate-800 rounded text-[9px] font-bold text-slate-400">
-                        {group.mode.toUpperCase()}
+                <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  {/* Group Header */}
+                  <div className="flex items-center justify-between px-2">
+                    <div className="flex items-center gap-4">
+                      <div className={`px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${getStatusColor(group.overallStatus)}`}>
+                        {group.overallStatus} ({(group.maxScore * 100).toFixed(0)}%)
+                      </div>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                        {new Date(group.timestamp).toLocaleString("id-ID", { 
+                          day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+                        })}
                       </span>
                     </div>
-                    <div className="text-[10px] font-black uppercase tracking-widest self-end sm:self-auto">
-                      Overall: <span className={
-                        group.overallStatus === "GROOMING" ? "text-red-500" : 
-                        group.overallStatus === "WARNING" ? "text-yellow-500" : "text-blue-400"
-                      }>{group.overallStatus} ({(group.maxScore * 100).toFixed(0)}%)</span>
-                    </div>
+                    
+                    <button 
+                      onClick={() => removeGroupLocally(group.batch_id)}
+                      className="text-[9px] font-black text-slate-600 hover:text-red-400 uppercase tracking-widest transition-colors flex items-center gap-1.5 group"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      Hapus dari Tampilan
+                    </button>
                   </div>
                   
-                  <div className="p-4 space-y-2">
-                    {group.items.map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-start gap-4 py-2 border-b border-slate-700/20 last:border-0 hover:bg-slate-800/20 px-2 rounded-lg transition-all">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-slate-300 italic line-clamp-2 transition-all duration-300">
-                            "{item.text_input}"
-                          </p>
-                          {item.text_input.length > 100 && (
-                            <button 
-                              onClick={(e) => {
-                                const p = e.currentTarget.previousElementSibling;
-                                if (p?.classList.contains('line-clamp-2')) {
-                                  p.classList.remove('line-clamp-2');
-                                  e.currentTarget.innerText = 'Sembunyikan';
-                                } else {
-                                  p?.classList.add('line-clamp-2');
-                                  e.currentTarget.innerText = 'Selengkapnya';
-                                }
-                              }}
-                              className="text-[8px] font-black text-blue-500 hover:text-blue-400 mt-1 uppercase tracking-widest"
-                            >
-                              Selengkapnya
-                            </button>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-3 shrink-0">
-                          <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-wider border ${
-                            item.status === "GROOMING" ? "bg-red-500/10 text-red-500/80 border-red-500/20" : 
-                            item.status === "WARNING" ? "bg-yellow-500/10 text-yellow-500/80 border-yellow-500/20" : 
-                            "bg-blue-500/10 text-blue-500/80 border-blue-500/20"
+                  {/* Chat Bubbles for this group */}
+                  <div className="bg-slate-800/30 rounded-[2rem] border border-slate-700/50 p-4 md:p-6 space-y-3 shadow-xl">
+                    {group.items.slice().reverse().map((item, idx) => {
+                      const isRisk = item.status !== "NORMAL";
+                      return (
+                        <div key={idx} className={`flex flex-col max-w-[85%] ${idx % 2 === 0 ? "items-start" : "items-start"}`}>
+                          <div className={`relative px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+                            item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100" :
+                            item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100" :
+                            "bg-slate-700/40 border border-slate-600/30 text-slate-300"
                           }`}>
-                            {item.status}
-                          </span>
-                          <span className={`text-[9px] font-bold ${
-                            item.status === "GROOMING" ? "text-red-500/70" : 
-                            item.status === "WARNING" ? "text-yellow-500/70" : "text-slate-500"
-                          }`}>
-                            {(item.score * 100).toFixed(0)}%
-                          </span>
+                            {item.text_input}
+                            
+                            {/* Score Tag in Bubble */}
+                            <div className="mt-2 flex items-center gap-2">
+                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter ${
+                                item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
+                                item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
+                                "bg-slate-800 text-slate-500"
+                              }`}>
+                                {item.status} ({(item.score * 100).toFixed(1)}%)
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
               ))
             )}
           </div>
         )}
+        
         {/* Footer */}
-        <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
-          <p className="text-slate-500 text-[10px] md:text-xs font-medium tracking-widest uppercase opacity-60">
+        <footer className="mt-32 py-10 border-t border-slate-800/50 text-center">
+          <p className="text-slate-600 text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
             &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System
           </p>
         </footer>
@@ -206,3 +213,4 @@ export default function HistoryPage() {
     </main>
   );
 }
+
