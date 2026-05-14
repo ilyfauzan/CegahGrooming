@@ -35,7 +35,16 @@ export default function PasteArea({ onMessagesReady, loading }: PasteAreaProps) 
         const isSystem = systemMessages.some((msg) =>
           clean.toLowerCase().includes(msg.toLowerCase())
         );
-        return isSystem ? "" : clean.trim();
+        if (isSystem) return "";
+
+        // Bersihkan tanda petik di awal/akhir dan koma di akhir baris
+        clean = clean.trim();
+        clean = clean.replace(/^["']+/, "");   // hapus petik di awal
+        clean = clean.replace(/["']+$/, "");   // hapus petik di akhir
+        clean = clean.replace(/,\s*$/, "");    // hapus koma di akhir baris
+        clean = clean.trim();
+
+        return clean;
       })
       .filter((line) => line !== "");
   };
