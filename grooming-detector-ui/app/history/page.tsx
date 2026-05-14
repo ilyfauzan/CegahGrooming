@@ -27,6 +27,7 @@ export default function HistoryPage() {
   const [historyGroups, setHistoryGroups] = useState<GroupedHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState<string>("ALL");
+  const [expandedBatchId, setExpandedBatchId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchHistory();
@@ -93,6 +94,13 @@ export default function HistoryPage() {
     }
   };
 
+  const clearAllLocally = () => {
+    if (historyGroups.length === 0) return;
+    if (confirm("Bersihkan semua riwayat dari tampilan? (Data di database tetap ada)")) {
+      setHistoryGroups([]);
+    }
+  };
+
   const getStatusColor = (status: string) => {
     if (status === "GROOMING") return "text-red-400 border-red-500/50 bg-red-500/10";
     if (status === "WARNING") return "text-yellow-400 border-yellow-500/50 bg-yellow-500/10";
@@ -118,7 +126,15 @@ export default function HistoryPage() {
             </p>
           </div>
           
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Tombol Bersihkan Semua */}
+            <button
+              onClick={clearAllLocally}
+              className="px-4 py-2 rounded-xl text-[10px] font-black tracking-widest text-red-500/60 hover:text-red-400 border border-red-500/20 hover:border-red-500/50 bg-red-500/5 transition-all mr-2"
+            >
+              BERSIHKAN SEMUA
+            </button>
+
             {["ALL", "NORMAL", "WARNING", "GROOMING"].map((s) => (
               <button
                 key={s}
@@ -147,62 +163,76 @@ export default function HistoryPage() {
                 <p className="text-slate-600 italic font-medium text-sm">Tidak ada riwayat ditemukan.</p>
               </div>
             ) : (
-              filteredGroups.map((group) => (
+            {filteredGroups.map((group) => {
+              const isExpanded = expandedBatchId === group.batch_id;
+              return (
                 <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Group Header */}
-                  <div className="flex items-center justify-between px-2">
+                  {/* Group Header (Clickable Accordion) */}
+                  <div 
+                    onClick={() => setExpandedBatchId(isExpanded ? null : group.batch_id)}
+                    className={`flex items-center justify-between px-4 py-5 bg-slate-800/30 border border-slate-700/50 rounded-2xl cursor-pointer hover:bg-slate-800/50 transition-all group ${isExpanded ? "border-blue-500/30 bg-slate-800/60" : ""}`}
+                  >
                     <div className="flex items-center gap-4">
                       <div className={`px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${getStatusColor(group.overallStatus)}`}>
                         {group.overallStatus} ({(group.maxScore * 100).toFixed(0)}%)
                       </div>
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                        {new Date(group.timestamp).toLocaleString("id-ID", { 
-                          day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
-                        })}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+                          Log Percakapan — {group.items.length} Pesan
+                        </span>
+                        <span className="text-[8px] font-medium text-slate-500 uppercase tracking-widest mt-1">
+                          {new Date(group.timestamp).toLocaleString("id-ID", { 
+                            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+                          })}
+                        </span>
+                      </div>
                     </div>
                     
-                    <button 
-                      onClick={() => removeGroupLocally(group.batch_id)}
-                      className="text-[9px] font-black text-slate-600 hover:text-red-400 uppercase tracking-widest transition-colors flex items-center gap-1.5 group"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    <div className="flex items-center gap-4">
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeGroupLocally(group.batch_id);
+                        }}
+                        className="text-[9px] font-black text-slate-600 hover:text-red-400 uppercase tracking-widest transition-colors flex items-center gap-1.5 opacity-0 group-hover:opacity-100"
+                      >
+                        Hapus
+                      </button>
+                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-slate-600 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
-                      Hapus dari Tampilan
-                    </button>
+                    </div>
                   </div>
                   
-                  {/* Chat Bubbles for this group */}
-                  <div className="bg-slate-800/30 rounded-[2rem] border border-slate-700/50 p-4 md:p-6 space-y-3 shadow-xl">
-                    {group.items.slice().reverse().map((item, idx) => {
-                      const isRisk = item.status !== "NORMAL";
-                      return (
-                        <div key={idx} className={`flex flex-col max-w-[85%] ${idx % 2 === 0 ? "items-start" : "items-start"}`}>
-                          <div className={`relative px-4 py-3 rounded-2xl text-sm leading-relaxed ${
-                            item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100" :
-                            item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100" :
-                            "bg-slate-700/40 border border-slate-600/30 text-slate-300"
+                  {/* Chat Bubbles (Expanded Only) */}
+                  {isExpanded && (
+                    <div className="bg-slate-900/40 rounded-[2.5rem] border border-slate-700/50 p-6 md:p-8 space-y-4 shadow-2xl animate-in zoom-in-95 duration-300">
+                      {group.items.slice().reverse().map((item, idx) => (
+                        <div key={idx} className="flex flex-col items-start max-w-[90%]">
+                          <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${
+                            item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
+                            item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100 shadow-lg shadow-yellow-900/10" :
+                            "bg-slate-800/80 border border-slate-700/50 text-slate-300"
                           }`}>
                             {item.text_input}
                             
-                            {/* Score Tag in Bubble */}
-                            <div className="mt-2 flex items-center gap-2">
-                              <span className={`text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-tighter ${
+                            <div className="mt-3 flex items-center gap-2">
+                              <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${
                                 item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
                                 item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
-                                "bg-slate-800 text-slate-500"
+                                "bg-slate-900 text-slate-500 border border-slate-700/30"
                               }`}>
-                                {item.status} ({(item.score * 100).toFixed(1)}%)
+                                {item.status} — {(item.score * 100).toFixed(1)}%
                               </span>
                             </div>
                           </div>
                         </div>
-                      );
-                    })}
-                  </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              ))
+              );
+            })}
             )}
           </div>
         )}
