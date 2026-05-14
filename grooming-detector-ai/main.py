@@ -71,13 +71,14 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
     # HUMANE THRESHOLD (Optimal: 0.5 / 0.31)
     if final_prob_grooming >= 0.50:
         label = "GROOMING"
-        conf_score = final_prob_grooming
     elif final_prob_grooming >= 0.31:
         label = "WARNING"
-        conf_score = final_prob_grooming
     else:
         label = "NORMAL"
-        conf_score = final_prob_normal
+    
+    # Skor yang dikirim ke UI selalu Probabilitas Grooming (Risk Level)
+    # Agar konsisten: Standalone + Context / 2
+    conf_score = final_prob_grooming
 
     return {
         'label': label,
