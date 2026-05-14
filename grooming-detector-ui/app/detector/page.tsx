@@ -1,41 +1,20 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 
 import Navbar from "../components/Navbar";
-import InputArea from "../components/InputArea";
-import HistoryTable from "../components/HistoryTable";
-import ResultDisplay from "../components/ResultDisplay";
+import PasteArea from "../components/PasteArea";
+import ChatBubbleList, { ChatBubbleItem } from "../components/ChatBubbleList";
+import ResultSidebar from "../components/ResultDisplay";
 
-export interface DetectionResult {
-  status: "NORMAL" | "WARNING" | "GROOMING";
-  score: number;
-  confidence: number;
-  isDropping: boolean;
-  standalone_score: number;
-  context_score: number;
-  translated: string;
-}
-
-export interface HistoryItem {
-  text_input: string;
-  score: number;
-  status: string;
-  created_at: string;
-}
+type ViewState = "paste" | "results";
 
 export default function DetectorDashboard() {
-  const [inputText, setInputText] = useState("");
-  const [result, setResult] = useState<DetectionResult | null>(null);
-  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [view, setView] = useState<ViewState>("paste");
+  const [chatResults, setChatResults] = useState<ChatBubbleItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const [hasAlert, setHasAlert] = useState(false);
 
-  // Ref untuk menyimpan skor terakhir sebagai acuan "isDropping"
-  const lastScoreRef = useRef<number | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
-
-  // 1. Fungsi untuk membuat/mengambil ID dari browser
+  // Session ID untuk Backend
   const getSessionId = () => {
     if (typeof window !== "undefined") {
       let id = localStorage.getItem("chat_session_id");
@@ -48,32 +27,31 @@ export default function DetectorDashboard() {
     return "";
   };
 
-  // 2. Fungsi Utama Analisis (Uni-Mode)
-  const analyzeGrooming = async () => {
-    if (!inputText || loading) return;
+  // Proses array pesan: kirim satu per satu ke backend, kumpulkan hasil
+  const processMessages = async (messages: string[], isAppend: boolean = false) => {
+    if (loading) return;
     setLoading(true);
-
-    // Auto-scroll ke area hasil saat analisis dimulai
-    setTimeout(() => {
-      resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
 
     try {
       const sessionId = getSessionId();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      let previousScoreRef = lastScoreRef.current;
 
-      const rawLines = inputText.split("\n").filter((l) => l.trim() !== "");
-      if (rawLines.length === 0) {
-        alert("Silakan masukkan teks terlebih dahulu.");
-        setLoading(false);
-        return;
+      // Jika bukan append (analisis baru), reset konteks backend
+      if (!isAppend) {
+        await fetch(`${apiUrl}/reset`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ session_id: sessionId }),
+        });
+        setChatResults([]);
       }
 
-      // SMART & HARD SPLITTING: Pecah baris yang terlalu panjang menjadi potongan yang bisa diproses AI
+      const batchId = "det_" + Math.random().toString(36).substring(2, 9);
+
+      // SMART SPLITTING: pecah baris yang terlalu panjang
       const lines: string[] = [];
-      rawLines.forEach((line) => {
-        let chunks = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter((s) => s.trim() !== "");
+      messages.forEach((line) => {
+        const chunks = line.split(/(?<=[.!?])\s+|(?<=[.!?])$/).filter((s) => s.trim() !== "");
         chunks.forEach((chunk) => {
           if (chunk.length > 250) {
             let remaining = chunk;
@@ -90,23 +68,7 @@ export default function DetectorDashboard() {
         });
       });
 
-      // Jika input adalah batch (> 1 baris), reset konteks agar bersih
-      if (lines.length > 1) {
-        await fetch(`${apiUrl}/reset`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ session_id: sessionId }),
-        });
-        setHistory([]);
-        setResult(null);
-        setHasAlert(false);
-        lastScoreRef.current = null;
-        previousScoreRef = null;
-      }
-
-      const batchId = "det_" + Math.random().toString(36).substring(2, 9);
-      let groomingFound = false;
-
+      // Kirim satu per satu ke backend
       for (const line of lines) {
         const response = await fetch(`${apiUrl}/predict`, {
           method: "POST",
@@ -114,92 +76,97 @@ export default function DetectorDashboard() {
           body: JSON.stringify({ text: line, session_id: sessionId }),
         });
 
-        const currentData = await response.json();
-        const isDropping = previousScoreRef !== null && previousScoreRef - currentData.score > 0.1;
+        const data = await response.json();
 
-        // Update UI Real-time
-        setResult({
-          score: currentData.score,
-          status: currentData.status,
-          confidence: currentData.confidence,
-          isDropping: isDropping,
-          standalone_score: currentData.standalone_score,
-          context_score: currentData.context_score,
-          translated: currentData.translated || line,
-        });
-
-        if (currentData.status === "GROOMING") groomingFound = true;
-
-        const historyEntry: HistoryItem = {
-          text_input: line,
-          score: currentData.score,
-          status: currentData.status,
-          created_at: new Date().toISOString(),
+        const newItem: ChatBubbleItem = {
+          text: line,
+          status: data.status,
+          score: data.score,
+          standalone_score: data.standalone_score || 0,
+          context_score: data.context_score || 0,
+          translated: data.translated || line,
         };
-        
-        // Jika batch, push ke akhir. Jika satu pesan, taruh di atas.
-        setHistory((prev) => lines.length > 1 ? [...prev, historyEntry] : [historyEntry, ...prev]);
 
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        // Update UI real-time: setiap pesan langsung muncul sebagai bubble
+        setChatResults((prev) => [...prev, newItem]);
 
         // Simpan ke Supabase
         try {
           await supabase.from("history_detection").insert([
             {
               text_input: line,
-              score: currentData.score,
-              status: currentData.status,
+              score: data.score,
+              status: data.status,
               session_id: sessionId,
               batch_id: batchId,
-              mode: currentData.mode_used || "auto",
+              mode: data.mode_used || "auto",
             },
           ]);
         } catch (e) {
           console.error("Supabase Error:", e);
         }
 
-        previousScoreRef = currentData.score;
-        lastScoreRef.current = currentData.score;
+        // Small delay agar UI sempat render
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
 
-      if (lines.length > 1) setHasAlert(groomingFound);
-      setInputText("");
+      // Pindah ke State 2 (results)
+      setView("results");
     } catch (err) {
       console.error(err);
-      alert(`Error: Pastikan Backend Python berjalan.`);
+      alert("Error: Pastikan Backend Python berjalan.");
     } finally {
       setLoading(false);
     }
   };
 
-  // 3. Fungsi Reset Konteks (Manual)
-  const handleResetContext = async () => {
+  // Handler: pesan baru dari PasteArea (analisis baru)
+  const handleMessagesReady = (messages: string[]) => {
+    processMessages(messages, false);
+  };
+
+  // Handler: tambah pesan dari clipboard (append ke session yang sudah ada)
+  const handleAppend = async () => {
     if (loading) return;
-    if (history.length === 0 && !inputText) return;
-    
-    if (!confirm("Apakah Anda yakin ingin menghapus seluruh riwayat dan memulai sesi baru?")) return;
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      if (!clipboardText || !clipboardText.trim()) {
+        alert("Clipboard kosong. Salin percakapan tambahan terlebih dahulu.");
+        return;
+      }
+      const newMessages = clipboardText
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l !== "");
+      if (newMessages.length === 0) {
+        alert("Tidak ada teks yang valid di clipboard.");
+        return;
+      }
+      processMessages(newMessages, true);
+    } catch {
+      alert("Gagal membaca clipboard. Pastikan Anda telah menyalin teks.");
+    }
+  };
+
+  // Handler: analisis baru (reset semua, kembali ke State 1)
+  const handleNewAnalysis = async () => {
+    if (loading) return;
+    if (chatResults.length > 0 && !confirm("Mulai analisis baru? Data saat ini akan dihapus.")) return;
 
     try {
       const sessionId = getSessionId();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      
       await fetch(`${apiUrl}/reset`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ session_id: sessionId }),
       });
-
-      // Reset Frontend State
-      setHistory([]);
-      setResult(null);
-      setHasAlert(false);
-      setInputText("");
-      lastScoreRef.current = null;
-      
-    } catch (err) {
-      console.error("Gagal reset konteks:", err);
-      alert("Gagal mereset konteks. Pastikan backend berjalan.");
+    } catch (e) {
+      console.error("Reset error:", e);
     }
+
+    setChatResults([]);
+    setView("paste");
   };
 
   return (
@@ -207,36 +174,34 @@ export default function DetectorDashboard() {
       <div className="max-w-6xl mx-auto">
         <Navbar />
 
-        {/* CONTROLS */}
-        <div className="mt-8 flex flex-col md:flex-row justify-end items-center gap-4">
-          <button
-            onClick={handleResetContext}
-            className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-red-500/10 border border-slate-700 hover:border-red-500/50 rounded-xl text-slate-500 hover:text-red-400 text-[10px] font-black tracking-widest transition-all active:scale-95 group"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 group-hover:rotate-180 transition-transform duration-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            BERSIHKAN KONTEKS
-          </button>
-        </div>
+        {/* STATE 1: Paste Area */}
+        {view === "paste" && (
+          <PasteArea onMessagesReady={handleMessagesReady} loading={loading} />
+        )}
 
-        {/* Unified Layout */}
-        <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <InputArea
-              inputText={inputText}
-              setInputText={setInputText}
-              onAnalyze={analyzeGrooming}
-              loading={loading}
-            />
-            <HistoryTable history={history} />
-          </div>
+        {/* STATE 2: Results (Chat Bubbles + Sidebar) */}
+        {view === "results" && (
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Kiri: Chat Bubbles */}
+            <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden"
+              style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+            >
+              <ChatBubbleList
+                items={chatResults}
+                onAppend={handleAppend}
+                loading={loading}
+              />
+            </div>
 
-          {/* Sisi Kanan: Hasil Prediksi */}
-          <div className="lg:col-span-1" ref={resultRef}>
-            <ResultDisplay result={result} />
+            {/* Kanan: Sidebar Ringkasan */}
+            <div className="lg:col-span-1">
+              <ResultSidebar
+                items={chatResults}
+                onNewAnalysis={handleNewAnalysis}
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Footer */}
         <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
