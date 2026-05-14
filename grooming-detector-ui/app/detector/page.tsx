@@ -181,24 +181,38 @@ export default function DetectorDashboard() {
 
         {/* STATE 2: Results (Chat Bubbles + Sidebar) */}
         {view === "results" && (
-          <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Kiri: Chat Bubbles */}
-            <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden"
-              style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
-            >
-              <ChatBubbleList
-                items={chatResults}
-                onAppend={handleAppend}
-                loading={loading}
-              />
+          <div className="mt-6 space-y-4">
+            {/* Tombol Analisis Baru di atas */}
+            <div className="flex justify-end">
+              <button
+                onClick={handleNewAnalysis}
+                className="flex items-center gap-2 px-4 py-2 bg-slate-800/80 hover:bg-red-500/10 border border-slate-700 hover:border-red-500/50 rounded-xl text-slate-500 hover:text-red-400 text-[10px] font-black tracking-widest transition-all active:scale-95"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                ANALISIS BARU
+              </button>
             </div>
 
-            {/* Kanan: Sidebar Ringkasan */}
-            <div className="lg:col-span-1">
-              <ResultSidebar
-                items={chatResults}
-                onNewAnalysis={handleNewAnalysis}
-              />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Kiri: Chat Bubbles */}
+              <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden"
+                style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
+              >
+                <ChatBubbleList
+                  items={chatResults}
+                  onAppend={handleAppend}
+                  loading={loading}
+                />
+              </div>
+
+              {/* Kanan: Sidebar Ringkasan */}
+              <div className="lg:col-span-1">
+                <ResultSidebar
+                  items={chatResults}
+                />
+              </div>
             </div>
           </div>
         )}
