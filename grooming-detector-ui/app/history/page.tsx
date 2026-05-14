@@ -163,7 +163,7 @@ export default function HistoryPage() {
                 <p className="text-slate-600 italic font-medium text-sm">Tidak ada riwayat ditemukan.</p>
               </div>
             ) : (
-            {filteredGroups.map((group) => {
+              filteredGroups.map((group) => {
               const isExpanded = expandedBatchId === group.batch_id;
               return (
                 <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -233,7 +233,6 @@ export default function HistoryPage() {
                 </div>
               );
             })}
-            )}
           </div>
         )}
         
