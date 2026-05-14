@@ -99,6 +99,10 @@ export default function HistoryPage() {
     return "text-blue-400 border-blue-500/30 bg-blue-500/10";
   };
 
+  const filteredGroups = historyGroups.filter(g => 
+    filterStatus === "ALL" || g.overallStatus === filterStatus
+  );
+
   return (
     <main className="min-h-screen bg-[#0f172a] text-slate-200 font-sans p-6 md:p-10">
       <div className="max-w-6xl mx-auto">
