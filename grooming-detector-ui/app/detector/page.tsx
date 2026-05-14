@@ -68,6 +68,9 @@ export default function DetectorDashboard() {
         });
       });
 
+      // Langsung tampilkan UI hasil (bubble akan muncul satu per satu)
+      setView("results");
+
       // Kirim satu per satu ke backend
       for (const line of lines) {
         const response = await fetch(`${apiUrl}/predict`, {
@@ -110,8 +113,6 @@ export default function DetectorDashboard() {
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
 
-      // Pindah ke State 2 (results)
-      setView("results");
     } catch (err) {
       console.error(err);
       alert("Error: Pastikan Backend Python berjalan.");
