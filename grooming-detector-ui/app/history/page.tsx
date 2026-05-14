@@ -83,7 +83,7 @@ export default function HistoryPage() {
       groups[bId].items.push(item);
     });
 
-    setHistoryGroups(Object.values(groups).sort((a, b) => 
+    setHistoryGroups(Object.values(groups).sort((a, b) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     ));
   };
@@ -96,7 +96,7 @@ export default function HistoryPage() {
 
   const clearAllLocally = () => {
     if (historyGroups.length === 0) return;
-    if (confirm("Bersihkan semua riwayat dari tampilan? (Data di database tetap ada)")) {
+    if (confirm("Bersihkan semua Deteksi Riwayat?")) {
       setHistoryGroups([]);
     }
   };
@@ -107,7 +107,7 @@ export default function HistoryPage() {
     return "text-blue-400 border-blue-500/30 bg-blue-500/10";
   };
 
-  const filteredGroups = historyGroups.filter(g => 
+  const filteredGroups = historyGroups.filter(g =>
     filterStatus === "ALL" || g.overallStatus === filterStatus
   );
 
@@ -119,13 +119,11 @@ export default function HistoryPage() {
         <div className="flex flex-col md:flex-row justify-between items-end mb-10 gap-6">
           <div>
             <h2 className="text-2xl md:text-3xl font-black premium-text-blue notranslate uppercase tracking-tighter">
-              Riwayat Analisis
+              Riwayat Deteksi
             </h2>
-            <p className="text-xs text-slate-500 font-medium mt-2 uppercase tracking-widest">
-              Log percakapan yang tersimpan di database
-            </p>
+
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-3">
             {/* Tombol Bersihkan Semua */}
             <button
@@ -139,11 +137,10 @@ export default function HistoryPage() {
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}
-                className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all ${
-                  filterStatus === s 
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40" 
-                  : "bg-slate-800/50 text-slate-500 hover:bg-slate-800 border border-slate-700"
-                }`}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all ${filterStatus === s
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-900/40"
+                    : "bg-slate-800/50 text-slate-500 hover:bg-slate-800 border border-slate-700"
+                  }`}
               >
                 {s}
               </button>
@@ -164,79 +161,77 @@ export default function HistoryPage() {
               </div>
             ) : (
               filteredGroups.map((group) => {
-              const isExpanded = expandedBatchId === group.batch_id;
-              return (
-                <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  {/* Group Header (Clickable Accordion) */}
-                  <div 
-                    onClick={() => setExpandedBatchId(isExpanded ? null : group.batch_id)}
-                    className={`flex items-center justify-between px-4 py-5 bg-slate-800/30 border border-slate-700/50 rounded-2xl cursor-pointer hover:bg-slate-800/50 transition-all group ${isExpanded ? "border-blue-500/30 bg-slate-800/60" : ""}`}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className={`px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${getStatusColor(group.overallStatus)}`}>
-                        {group.overallStatus} ({(group.maxScore * 100).toFixed(0)}%)
+                const isExpanded = expandedBatchId === group.batch_id;
+                return (
+                  <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    {/* Group Header (Clickable Accordion) */}
+                    <div
+                      onClick={() => setExpandedBatchId(isExpanded ? null : group.batch_id)}
+                      className={`flex items-center justify-between px-4 py-5 bg-slate-800/30 border border-slate-700/50 rounded-2xl cursor-pointer hover:bg-slate-800/50 transition-all group ${isExpanded ? "border-blue-500/30 bg-slate-800/60" : ""}`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`px-3 py-1 rounded-lg text-[9px] font-black tracking-widest uppercase ${getStatusColor(group.overallStatus)}`}>
+                          {group.overallStatus} ({(group.maxScore * 100).toFixed(0)}%)
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
+                            Log Percakapan — {group.items.length} Pesan
+                          </span>
+                          <span className="text-[8px] font-medium text-slate-500 uppercase tracking-widest mt-1">
+                            {new Date(group.timestamp).toLocaleString("id-ID", {
+                              day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                            })}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">
-                          Log Percakapan — {group.items.length} Pesan
-                        </span>
-                        <span className="text-[8px] font-medium text-slate-500 uppercase tracking-widest mt-1">
-                          {new Date(group.timestamp).toLocaleString("id-ID", { 
-                            day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' 
-                          })}
-                        </span>
+
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeGroupLocally(group.batch_id);
+                          }}
+                          className="text-[9px] font-black text-slate-600 hover:text-red-400 uppercase tracking-widest transition-colors flex items-center gap-1.5 opacity-0 group-hover:opacity-100"
+                        >
+                          Hapus
+                        </button>
+                        <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-slate-600 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
                       </div>
                     </div>
-                    
-                    <div className="flex items-center gap-4">
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          removeGroupLocally(group.batch_id);
-                        }}
-                        className="text-[9px] font-black text-slate-600 hover:text-red-400 uppercase tracking-widest transition-colors flex items-center gap-1.5 opacity-0 group-hover:opacity-100"
-                      >
-                        Hapus
-                      </button>
-                      <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 text-slate-600 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </div>
-                  
-                  {/* Chat Bubbles (Expanded Only) */}
-                  {isExpanded && (
-                    <div className="bg-slate-900/40 rounded-[2.5rem] border border-slate-700/50 p-6 md:p-8 space-y-4 shadow-2xl animate-in zoom-in-95 duration-300">
-                      {group.items.slice().reverse().map((item, idx) => (
-                        <div key={idx} className="flex flex-col items-start max-w-[90%]">
-                          <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${
-                            item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
-                            item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100 shadow-lg shadow-yellow-900/10" :
-                            "bg-slate-800/80 border border-slate-700/50 text-slate-300"
-                          }`}>
-                            {item.text_input}
-                            
-                            <div className="mt-3 flex items-center gap-2">
-                              <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${
-                                item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
-                                item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
-                                "bg-slate-900 text-slate-500 border border-slate-700/30"
+
+                    {/* Chat Bubbles (Expanded Only) */}
+                    {isExpanded && (
+                      <div className="bg-slate-900/40 rounded-[2.5rem] border border-slate-700/50 p-6 md:p-8 space-y-4 shadow-2xl animate-in zoom-in-95 duration-300">
+                        {group.items.slice().reverse().map((item, idx) => (
+                          <div key={idx} className="flex flex-col items-start max-w-[90%]">
+                            <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
+                                item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100 shadow-lg shadow-yellow-900/10" :
+                                  "bg-slate-800/80 border border-slate-700/50 text-slate-300"
                               }`}>
-                                {item.status} — {(item.score * 100).toFixed(1)}%
-                              </span>
+                              {item.text_input}
+
+                              <div className="mt-3 flex items-center gap-2">
+                                <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
+                                    item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
+                                      "bg-slate-900 text-slate-500 border border-slate-700/30"
+                                  }`}>
+                                  {item.status} — {(item.score * 100).toFixed(1)}%
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
         )}
-        
+
         {/* Footer */}
         <footer className="mt-32 py-10 border-t border-slate-800/50 text-center">
           <p className="text-slate-600 text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
