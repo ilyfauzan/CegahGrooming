@@ -16,12 +16,16 @@ app.add_middleware(
 )
 
 # 2. Konfigurasi Model
-MODEL_PATH = "./"  # Diatur ke root untuk deployment Hugging Face
+MODEL_PATH = "./modelfinal" 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 print(f"🚀 Loading model from {MODEL_PATH}...")
 tokenizer = BertTokenizer.from_pretrained(MODEL_PATH)
+# Tambahkan token kustom [UTT] agar dikenali sebagai pembatas pesan
+tokenizer.add_special_tokens({'additional_special_tokens': ['[UTT]']})
+
 model = BertForSequenceClassification.from_pretrained(MODEL_PATH).to(device)
+model.resize_token_embeddings(len(tokenizer)) # Sinkronkan model dengan tokenizer baru
 model.eval()
 
 translator = GoogleTranslator(source='id', target='en')
@@ -42,13 +46,13 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
     
     # 2. Ambil chunk konteks
     start = max(0, len(translated_history) - window_size)
-    context_chunk = " [SEP] ".join(translated_history[start:])
-    print(f"DEBUG: Joined Context [SEP] -> {context_chunk}")
+    context_chunk = " [UTT] ".join(translated_history[start:])
+    print(f"DEBUG: Joined Context [UTT] -> {context_chunk}")
  
-    # 3. Inperensi Standalone
-    inputs_single = tokenizer(latest_translated, return_tensors="pt", padding=True, truncation=True, max_length=512).to(device)
+    # 3. Inperensi Standalone (Max length 256 sesuai training)
+    inputs_single = tokenizer(latest_translated, return_tensors="pt", padding=True, truncation=True, max_length=256).to(device)
     # 4. Inperensi Konteks
-    inputs_context = tokenizer(context_chunk, return_tensors="pt", padding=True, truncation=True, max_length=512).to(device)
+    inputs_context = tokenizer(context_chunk, return_tensors="pt", padding=True, truncation=True, max_length=256).to(device)
     
     with torch.no_grad():
         # Standalone
@@ -64,11 +68,11 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
     final_prob_grooming = (0.5 * prob_single) + (0.5 * prob_context)
     final_prob_normal = 1.0 - final_prob_grooming
 
-    # HUMANE THRESHOLD (Tetap 0.75 / 0.5)
-    if final_prob_grooming >= 0.75:
+    # HUMANE THRESHOLD (Optimal: 0.5 / 0.31)
+    if final_prob_grooming >= 0.50:
         label = "GROOMING"
         conf_score = final_prob_grooming
-    elif final_prob_grooming >= 0.5:
+    elif final_prob_grooming >= 0.31:
         label = "WARNING"
         conf_score = final_prob_grooming
     else:
@@ -101,31 +105,11 @@ async def predict(data: ChatInput):
         words = set(text.lower().split())
         return len(words.intersection(english_words)) > 0
 
-    # 1. Terjemahkan teks jika bukan bahasa Inggris
-    def preprocess_text(t):
-        t = t.lower().strip()
-        # Perbaikan manual untuk frase yang sering salah
-        mappings = {
-            "boleh ya": "boleh ya?",
-            "bisa ya": "bisa ya?",
-            "janji ya": "janji ya?",
-            "ngapain": "sedang apa",
-            "udah": "sudah"
-        }
-        for k, v in mappings.items():
-            if t == k: t = v
-        return t
-
-    text_to_translate = preprocess_text(data.text)
-
     try:
-        if is_english(text_to_translate):
-            translated_text = text_to_translate
+        if is_english(data.text):
+            translated_text = data.text
         else:
-            translated_text = translator.translate(text_to_translate)
-            # Fix manual hasil terjemahan yang aneh
-            if translated_text.lower() == "yes, yes":
-                translated_text = "May I?"
+            translated_text = translator.translate(data.text)
     except Exception as e:
         print(f"Translation error: {e}")
         translated_text = data.text
