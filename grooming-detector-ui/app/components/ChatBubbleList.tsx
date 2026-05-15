@@ -209,8 +209,8 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
               onClick={handleSend}
               disabled={loading || !inputText.trim()}
               className={`p-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center ${!inputText.trim() || loading
-                  ? "bg-slate-800 text-slate-600 cursor-not-allowed"
-                  : "bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-500"
+                ? "bg-slate-800 text-slate-600 cursor-not-allowed"
+                : "bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-500"
                 }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
