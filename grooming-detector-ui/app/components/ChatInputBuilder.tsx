@@ -63,14 +63,11 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
 
   const handleAnalyze = () => {
     const filteredMessages = messages.map(m => m.trim()).filter(m => m.length > 0);
-    
-    if (filteredMessages.length < 3) {
-      alert("⚠️ Mohon masukkan minimal 3 pesan untuk deteksi yang akurat dan menghindari False Positive.");
-      return;
-    }
-    
+    if (filteredMessages.length < 2) return;
     onAnalyze(filteredMessages);
   };
+
+  const activeMessages = messages.filter(m => m.trim()).length;
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
@@ -79,22 +76,22 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
         <div className="flex gap-2">
           <button
             onClick={handlePaste}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400 text-xs font-bold hover:bg-blue-500/20 transition-all"
+            className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400 text-[10px] font-black tracking-widest hover:bg-blue-500/20 transition-all uppercase"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            TEMPEL LOG CHAT
+            Tempel Log
           </button>
           <button
             onClick={clearAll}
-            className="px-4 py-2 text-slate-500 text-xs font-bold hover:text-red-400 transition-all"
+            className="px-4 py-2 text-slate-500 text-[10px] font-black tracking-widest hover:text-red-400 transition-all uppercase"
           >
-            BERSIHKAN
+            Bersihkan
           </button>
         </div>
-        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
-          {messages.filter(m => m.trim()).length} PESAN TERISI
+        <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeMessages < 2 ? 'text-amber-500' : 'text-emerald-500'}`}>
+          {activeMessages} Pesan Terisi
         </div>
       </div>
 
@@ -104,14 +101,14 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
         className="relative bg-slate-900/50 border border-slate-800 rounded-[2.5rem] p-6 h-[400px] overflow-y-auto space-y-4 scroll-smooth custom-scrollbar"
       >
         {messages.map((msg, idx) => (
-          <div key={idx} className="flex items-start gap-3 group animate-in fade-in slide-in-from-bottom-2 duration-300">
-            <div className="flex-1 relative">
+          <div key={idx} className="flex items-center gap-3 group animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex-1 relative flex items-center gap-2">
               <textarea
                 value={msg}
                 onChange={(e) => handleMessageChange(idx, e.target.value)}
                 placeholder={`Pesan ke-${idx + 1}...`}
                 rows={1}
-                className="w-full bg-slate-800/50 border border-slate-700/50 rounded-2xl px-5 py-3 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-all placeholder:text-slate-600"
+                className="flex-1 bg-slate-800/50 border border-slate-700/50 rounded-2xl px-5 py-3 text-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 resize-none transition-all placeholder:text-slate-600 overflow-hidden appearance-none"
                 style={{ height: 'auto', minHeight: '44px' }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
@@ -119,13 +116,14 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
                   target.style.height = `${target.scrollHeight}px`;
                 }}
               />
-              {/* Delete Button */}
+              {/* Delete Button - Always Visible */}
               <button
                 onClick={() => removeMessage(idx)}
-                className="absolute -right-2 -top-2 w-6 h-6 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center text-slate-500 hover:text-red-400 hover:border-red-400/50 opacity-0 group-hover:opacity-100 transition-all shadow-lg"
+                className="shrink-0 w-10 h-10 bg-slate-800/80 border border-slate-700/50 rounded-xl flex items-center justify-center text-slate-500 hover:text-red-400 hover:border-red-400/50 transition-all shadow-lg"
+                title="Hapus pesan"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
               </button>
             </div>
@@ -134,32 +132,41 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
 
         <button
           onClick={addMessage}
-          className="w-full py-4 border-2 border-dashed border-slate-800 rounded-2xl text-slate-600 text-xs font-bold hover:border-slate-700 hover:text-slate-400 transition-all flex items-center justify-center gap-2"
+          className="w-full py-4 border-2 border-dashed border-slate-800 rounded-2xl text-slate-600 text-xs font-black tracking-widest hover:border-slate-700 hover:text-slate-400 transition-all flex items-center justify-center gap-2 uppercase"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          TAMBAH PESAN MANUAL
+          Tambah Baris
         </button>
       </div>
 
       {/* Analyze Button */}
-      <div className="pt-4">
+      <div className="pt-4 space-y-4">
+        {activeMessages < 2 && (
+          <div className="flex items-center justify-center gap-2 text-amber-500/80 animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <p className="text-[10px] font-black uppercase tracking-widest">
+              Tambahkan minimal 2 pesan untuk memulai analisis
+            </p>
+          </div>
+        )}
+        
         <button
           onClick={handleAnalyze}
-          disabled={isLoading}
+          disabled={isLoading || activeMessages < 2}
           className={`w-full py-5 rounded-[2rem] font-black tracking-[0.2em] uppercase text-sm transition-all shadow-2xl ${
-            isLoading 
-              ? "bg-slate-800 text-slate-500 cursor-not-allowed" 
+            isLoading || activeMessages < 2
+              ? "bg-slate-800 text-slate-600 cursor-not-allowed opacity-50" 
               : "bg-blue-600 text-white shadow-blue-500/20 hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-95"
           }`}
         >
           {isLoading ? "Sedang Menganalisis..." : "Mulai Deteksi Grooming"}
         </button>
-        <p className="text-center mt-4 text-slate-500 text-[10px] uppercase font-bold tracking-widest opacity-60">
-          Sistem membutuhkan konteks percakapan untuk menghindari kesalahan deteksi
-        </p>
       </div>
     </div>
   );
+}
 }
