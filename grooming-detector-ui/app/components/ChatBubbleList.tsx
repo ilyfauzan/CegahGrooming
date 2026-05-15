@@ -77,7 +77,7 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={`flex flex-col ${className}`}>
       {/* Header */}
       <div className="flex items-center justify-between p-4 md:p-5 border-b border-slate-700 bg-slate-800/80 rounded-t-3xl">
         <div className="flex items-center gap-3">

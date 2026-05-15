@@ -211,7 +211,7 @@ export default function DetectorDashboard() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* Kiri: Chat Bubbles */}
-              <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden"
+              <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden h-fit"
                 style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
               >
                 <ChatBubbleList
