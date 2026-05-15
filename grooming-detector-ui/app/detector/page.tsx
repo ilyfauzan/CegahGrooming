@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 
 import Navbar from "../components/Navbar";
-import PasteArea from "../components/PasteArea";
+import ChatInputBuilder from "../components/ChatInputBuilder";
 import ChatBubbleList, { ChatBubbleItem } from "../components/ChatBubbleList";
 import ResultSidebar from "../components/ResultDisplay";
 
@@ -19,7 +19,7 @@ export default function DetectorDashboard() {
     if (typeof window !== "undefined") {
       let id = localStorage.getItem("chat_session_id");
       if (!id) {
-        id = "user_" + Math.random().toString(36).substring(2, 9);
+        id = "ssn_" + Math.random().toString(36).substring(2, 9);
         localStorage.setItem("chat_session_id", id);
       }
       return id;
@@ -98,18 +98,18 @@ export default function DetectorDashboard() {
 
         // Simpan ke Supabase
         try {
-          await supabase.from("history_detection").insert([
-            {
-              text_input: line,
-              score: data.score,
-              status: data.status,
-              session_id: sessionId,
-              batch_id: batchId,
-              mode: data.mode_used || "auto",
-            },
-          ]);
-        } catch (e) {
-          console.error("Supabase Error:", e);
+          await supabase.from("grooming_logs").insert({
+            session_id: sessionId,
+            batch_id: batchId,
+            original_text: line,
+            translated_text: data.translated || line,
+            score: data.score,
+            status: data.status,
+            standalone_score: data.standalone_score || 0,
+            context_score: data.context_score || 0,
+          });
+        } catch (dbErr) {
+          console.error("DB Error:", dbErr);
         }
 
         // Small delay agar UI sempat render
@@ -180,7 +180,17 @@ export default function DetectorDashboard() {
 
         {/* STATE 1: Paste Area */}
         {view === "paste" && (
-          <PasteArea onMessagesReady={handleMessagesReady} loading={loading} />
+          <div className="flex-1 flex flex-col justify-center animate-in fade-in zoom-in-95 duration-700 py-10">
+            <div className="text-center mb-10 space-y-3">
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white">
+                Analisis <span className="premium-text-vibrant italic">Chat Log</span>
+              </h2>
+              <p className="text-slate-500 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-medium">
+                Bangun percakapan di bawah atau tempel log dari WhatsApp untuk memulai deteksi predator online.
+              </p>
+            </div>
+            <ChatInputBuilder onAnalyze={handleMessagesReady} isLoading={loading} />
+          </div>
         )}
 
         {/* STATE 2: Results (Chat Bubbles + Sidebar) */}
