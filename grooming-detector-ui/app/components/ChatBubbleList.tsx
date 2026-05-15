@@ -15,9 +15,10 @@ interface ChatBubbleListProps {
   onAppend: () => void;
   onSendMessage: (text: string) => void;
   loading: boolean;
+  className?: string;
 }
 
-export default function ChatBubbleList({ items, onAppend, onSendMessage, loading }: ChatBubbleListProps) {
+export default function ChatBubbleList({ items, onAppend, onSendMessage, loading, className = "" }: ChatBubbleListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [inputText, setInputText] = useState("");
