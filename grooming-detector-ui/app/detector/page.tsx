@@ -182,11 +182,11 @@ export default function DetectorDashboard() {
         {view === "paste" && (
           <div className="flex-1 flex flex-col justify-center animate-in fade-in zoom-in-95 duration-700 py-10">
             <div className="text-center mb-10 space-y-3">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white">
-                Analisis <span className="premium-text-vibrant italic">Chat Log</span>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-white pb-2">
+                Analisis <span className="premium-text-vibrant italic">Percakapan</span>
               </h2>
               <p className="text-slate-500 text-sm md:text-base max-w-lg mx-auto leading-relaxed font-medium">
-                Bangun percakapan di bawah atau tempel log dari WhatsApp untuk memulai deteksi predator online.
+                Ketik percakapan di bawah atau tempel percakapan untuk memulai deteksi.
               </p>
             </div>
             <ChatInputBuilder onAnalyze={handleMessagesReady} isLoading={loading} />

@@ -100,7 +100,7 @@ export default function PasteArea({ onMessagesReady, loading }: PasteAreaProps) 
             Analisis Percakapan
           </h2>
           <p className="text-xs md:text-sm text-slate-500 font-medium mt-2 max-w-md mx-auto">
-            Salin log chat dari WhatsApp, Notepad, atau sumber lainnya, lalu klik tombol di bawah untuk memulai analisis.
+            Salin riwayat chat dari WhatsApp, Instagram, atau sumber lainnya, lalu klik tombol di bawah untuk memulai analisis.
           </p>
         </div>
       </div>

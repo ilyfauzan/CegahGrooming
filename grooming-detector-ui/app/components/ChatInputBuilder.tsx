@@ -81,7 +81,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
             </svg>
-            Tempel Log
+            Tempel Riwayat Chat
           </button>
           <button
             onClick={clearAll}
@@ -96,7 +96,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       </div>
 
       {/* Chat Container */}
-      <div 
+      <div
         ref={scrollRef}
         className="relative bg-slate-900/50 border border-slate-800 rounded-[2.5rem] p-6 h-[400px] overflow-y-auto space-y-4 scroll-smooth custom-scrollbar"
       >
@@ -144,17 +144,16 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
             </p>
           </div>
         )}
-        
+
         <button
           onClick={handleAnalyze}
           disabled={isLoading || activeMessages < 2}
-          className={`w-full py-5 rounded-[2rem] font-black tracking-[0.2em] uppercase text-sm transition-all shadow-2xl ${
-            isLoading || activeMessages < 2
-              ? "bg-slate-800 text-slate-600 cursor-not-allowed opacity-50" 
-              : "bg-blue-600 text-white shadow-blue-500/20 hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-95"
-          }`}
+          className={`w-full py-5 rounded-[2rem] font-black tracking-[0.2em] uppercase text-sm transition-all shadow-2xl ${isLoading || activeMessages < 2
+            ? "bg-slate-800 text-slate-600 cursor-not-allowed opacity-50"
+            : "bg-blue-600 text-white shadow-blue-500/20 hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-95"
+            }`}
         >
-          {isLoading ? "Sedang Menganalisis..." : "Mulai Deteksi Grooming"}
+          {isLoading ? "Sedang Menganalisis..." : "Mulai Deteksi"}
         </button>
       </div>
     </div>
