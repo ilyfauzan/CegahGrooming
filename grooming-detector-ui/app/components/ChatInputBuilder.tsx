@@ -169,4 +169,3 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
     </div>
   );
 }
-}
