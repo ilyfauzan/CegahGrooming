@@ -189,12 +189,12 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </button>
-            
+
             <textarea
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ketik pesan untuk memancing respons..."
+              placeholder="Ketik pesan untuk melanjutkan percakapan..."
               rows={1}
               className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-slate-200 py-2 px-1 resize-none overflow-hidden max-h-32 placeholder:text-slate-600 appearance-none"
               style={{ height: '40px' }}
@@ -208,11 +208,10 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
             <button
               onClick={handleSend}
               disabled={loading || !inputText.trim()}
-              className={`p-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center ${
-                !inputText.trim() || loading 
-                  ? "bg-slate-800 text-slate-600 cursor-not-allowed" 
+              className={`p-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center ${!inputText.trim() || loading
+                  ? "bg-slate-800 text-slate-600 cursor-not-allowed"
                   : "bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-500"
-              }`}
+                }`}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
