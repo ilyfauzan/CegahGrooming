@@ -217,6 +217,7 @@ export default function DetectorDashboard() {
                 <ChatBubbleList
                   items={chatResults}
                   onAppend={handleAppend}
+                  onSendMessage={(text) => processMessages([text], true)}
                   loading={loading}
                 />
               </div>

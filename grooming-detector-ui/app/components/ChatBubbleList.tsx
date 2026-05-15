@@ -13,12 +13,14 @@ export interface ChatBubbleItem {
 interface ChatBubbleListProps {
   items: ChatBubbleItem[];
   onAppend: () => void;
+  onSendMessage: (text: string) => void;
   loading: boolean;
 }
 
-export default function ChatBubbleList({ items, onAppend, loading }: ChatBubbleListProps) {
+export default function ChatBubbleList({ items, onAppend, onSendMessage, loading }: ChatBubbleListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [inputText, setInputText] = useState("");
 
   // Auto-scroll ke bawah saat ada item baru
   useEffect(() => {
@@ -26,6 +28,19 @@ export default function ChatBubbleList({ items, onAppend, loading }: ChatBubbleL
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [items]);
+
+  const handleSend = () => {
+    if (!inputText.trim() || loading) return;
+    onSendMessage(inputText);
+    setInputText("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
 
   const getStatusConfig = (status: string) => {
     if (status === "GROOMING") {
@@ -159,19 +174,52 @@ export default function ChatBubbleList({ items, onAppend, loading }: ChatBubbleL
         )}
       </div>
 
-      {/* Footer — Tombol Tambah Pesan */}
-      <div className="p-4 border-t border-slate-700 bg-slate-800/60 rounded-b-3xl">
-        <button
-          onClick={onAppend}
-          disabled={loading}
-          className="w-full py-3 rounded-xl font-bold text-sm bg-slate-700/50 hover:bg-slate-700 border border-slate-600/50 hover:border-blue-500/30 text-slate-400 hover:text-blue-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-          </svg>
-          Tambah Pesan dari Clipboard
-        </button>
-      </div>
+      {/* Footer — Input Bar & Tambah Pesan (Hanya muncul jika TIDAK sedang loading) */}
+      {!loading && (
+        <div className="p-4 bg-slate-800/40 border-t border-slate-700/50 rounded-b-3xl">
+          <div className="flex items-end gap-2 bg-slate-900/80 border border-slate-700/50 rounded-2xl p-2 focus-within:border-blue-500/50 transition-all shadow-inner">
+            <button
+              onClick={onAppend}
+              disabled={loading}
+              title="Tempel dari Clipboard"
+              className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-blue-400 transition-all active:scale-95 disabled:opacity-50"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+            </button>
+            
+            <textarea
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="Ketik pesan untuk memancing respons..."
+              rows={1}
+              className="flex-1 bg-transparent border-none focus:ring-0 text-sm text-slate-200 py-2 px-1 resize-none overflow-hidden max-h-32 placeholder:text-slate-600 appearance-none"
+              style={{ height: '40px' }}
+              onInput={(e) => {
+                const target = e.target as HTMLTextAreaElement;
+                target.style.height = '40px';
+                target.style.height = `${target.scrollHeight}px`;
+              }}
+            />
+
+            <button
+              onClick={handleSend}
+              disabled={loading || !inputText.trim()}
+              className={`p-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center ${
+                !inputText.trim() || loading 
+                  ? "bg-slate-800 text-slate-600 cursor-not-allowed" 
+                  : "bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-500"
+              }`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 rotate-90" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
