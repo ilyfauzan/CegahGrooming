@@ -116,16 +116,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
                   target.style.height = `${target.scrollHeight}px`;
                 }}
               />
-              {/* Delete Button - Always Visible */}
-              <button
-                onClick={() => removeMessage(idx)}
-                className="shrink-0 w-10 h-10 bg-slate-800/80 border border-slate-700/50 rounded-xl flex items-center justify-center text-slate-500 hover:text-red-400 hover:border-red-400/50 transition-all shadow-lg"
-                title="Hapus pesan"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
+              {/* Delete Button removed per user request */}
             </div>
           </div>
         ))}
