@@ -120,7 +120,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
 
   const handleAnalyze = () => {
     const filteredMessages = messages.map(m => m.trim()).filter(m => m.length > 0);
-    if (filteredMessages.length < 2) return;
+    if (filteredMessages.length < 1) return;
     onAnalyze(filteredMessages);
   };
 
@@ -206,21 +206,21 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
 
       {/* Analyze Button */}
       <div className="pt-4 space-y-4">
-        {activeMessages < 2 && (
+        {activeMessages < 1 && (
           <div className="flex items-center justify-center gap-2 text-amber-500/80 animate-pulse">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <p className="text-[10px] font-black uppercase tracking-widest">
-              Tambahkan minimal 2 pesan untuk memulai analisis
+              Tambahkan minimal 1 pesan untuk memulai analisis
             </p>
           </div>
         )}
 
         <button
           onClick={handleAnalyze}
-          disabled={isLoading || activeMessages < 2}
-          className={`w-full py-5 rounded-[2rem] font-black tracking-[0.2em] uppercase text-sm transition-all shadow-2xl ${isLoading || activeMessages < 2
+          disabled={isLoading || activeMessages < 1}
+          className={`w-full py-5 rounded-[2rem] font-black tracking-[0.2em] uppercase text-sm transition-all shadow-2xl ${isLoading || activeMessages < 1
             ? "bg-slate-800 text-slate-600 cursor-not-allowed opacity-50"
             : "bg-blue-600 text-white shadow-blue-500/20 hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-95"
             }`}
