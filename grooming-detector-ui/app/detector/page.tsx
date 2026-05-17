@@ -98,13 +98,14 @@ export default function DetectorDashboard() {
 
         // Simpan ke Supabase
         try {
-          await supabase.from("grooming_logs").insert({
+          await supabase.from("history_detection").insert({
             session_id: sessionId,
             batch_id: batchId,
-            original_text: line,
+            text_input: line,
             translated_text: data.translated || line,
             score: data.score,
             status: data.status,
+            mode: data.mode_used || "single",
             standalone_score: data.standalone_score || 0,
             context_score: data.context_score || 0,
           });
