@@ -102,12 +102,8 @@ export default function DetectorDashboard() {
             session_id: sessionId,
             batch_id: batchId,
             text_input: line,
-            translated_text: data.translated || line,
             score: data.score,
-            status: data.status,
-            mode: data.mode_used || "single",
-            standalone_score: data.standalone_score || 0,
-            context_score: data.context_score || 0,
+            status: data.status
           });
         } catch (dbErr) {
           console.error("DB Error:", dbErr);
