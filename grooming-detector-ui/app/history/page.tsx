@@ -67,9 +67,14 @@ export default function HistoryPage() {
 
   const groupData = (data: HistoryRecord[]) => {
     const groups: { [key: string]: GroupedHistory } = {};
+    const hiddenLogs = JSON.parse(localStorage.getItem("hidden_history_logs") || "[]");
 
     data.forEach((item) => {
       const bId = item.batch_id || "single_" + item.id;
+      
+      // Jika batch_id ini ada di daftar yang disembunyikan, lewati
+      if (hiddenLogs.includes(bId)) return;
+
       if (!groups[bId]) {
         groups[bId] = {
           batch_id: bId,
@@ -88,15 +93,14 @@ export default function HistoryPage() {
     ));
   };
 
-  const removeGroupLocally = async (batchId: string) => {
-    if (confirm("Hapus log ini secara permanen dari database?")) {
-      // Hapus dari state UI agar instan
+  const removeGroupLocally = (batchId: string) => {
+    if (confirm("Hapus log ini dari tampilan? (Data di database tetap ada)")) {
       setHistoryGroups(prev => prev.filter(g => g.batch_id !== batchId));
       
-      // Hapus dari database Supabase
-      if (supabase) {
-        await supabase.from("history_detection").delete().eq("batch_id", batchId);
-      }
+      // Simpan batchId ke localStorage agar tetap tersembunyi walau di-refresh
+      const hiddenLogs = JSON.parse(localStorage.getItem("hidden_history_logs") || "[]");
+      hiddenLogs.push(batchId);
+      localStorage.setItem("hidden_history_logs", JSON.stringify(hiddenLogs));
     }
   };
 
