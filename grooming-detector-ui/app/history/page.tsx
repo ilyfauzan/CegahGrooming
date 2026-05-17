@@ -106,16 +106,19 @@ export default function HistoryPage() {
 
   const clearAllLocally = () => {
     if (historyGroups.length === 0) return;
-    if (confirm("Bersihkan semua Riwayat? (Tindakan ini tidak bisa dibatalkan)")) {
+    if (confirm("Bersihkan semua Riwayat dari tampilan? (Data asli di database tetap aman)")) {
       // Generate ID baru agar riwayat lama 'tersembunyi' secara permanen
       const newSessionId = "ssn_" + Math.random().toString(36).substring(2, 12);
       localStorage.setItem("chat_session_id", newSessionId);
+      
+      // Bersihkan juga memori hide individual
+      localStorage.removeItem("hidden_history_logs");
       
       // Kosongkan tampilan
       setHistoryGroups([]);
       setExpandedBatchId(null);
       
-      alert("Riwayat telah dibersihkan.");
+      alert("Semua riwayat berhasil dihilangkan dari layar Anda.");
     }
   };
 
