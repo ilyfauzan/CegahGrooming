@@ -88,9 +88,15 @@ export default function HistoryPage() {
     ));
   };
 
-  const removeGroupLocally = (batchId: string) => {
-    if (confirm("Hapus log ini dari tampilan? (Data di database tetap ada)")) {
+  const removeGroupLocally = async (batchId: string) => {
+    if (confirm("Hapus log ini secara permanen dari database?")) {
+      // Hapus dari state UI agar instan
       setHistoryGroups(prev => prev.filter(g => g.batch_id !== batchId));
+      
+      // Hapus dari database Supabase
+      if (supabase) {
+        await supabase.from("history_detection").delete().eq("batch_id", batchId);
+      }
     }
   };
 
