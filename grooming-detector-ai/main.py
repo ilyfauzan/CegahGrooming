@@ -77,7 +77,7 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
         label = "NORMAL"
     
     # Skor yang dikirim ke UI selalu Probabilitas Grooming (Risk Level)
-    # Agar konsisten: Standalone + Context / 2
+    # Agar konsisten secara matematis (hasil pembagian)
     conf_score = final_prob_grooming
 
     return {
