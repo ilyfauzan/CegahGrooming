@@ -122,7 +122,9 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
         <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Statistik</h4>
         <div className="space-y-3">
           <div className="flex justify-between items-center py-1.5 px-2 -mx-2">
-            <span className="text-xs text-slate-400">Total Pesan</span>
+            <span className="text-xs text-slate-400 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-transparent" /> Total Pesan
+            </span>
             <span className="text-sm font-black text-white">{total}</span>
           </div>
           <div className="flex justify-between items-center py-1.5 px-2 -mx-2">
