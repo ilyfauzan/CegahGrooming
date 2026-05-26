@@ -15,6 +15,12 @@ export default function ResultSidebar({ items }: ResultSidebarProps) {
   const warningCount = items.filter((i) => i.status === "WARNING").length;
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
   const highestScore = total > 0 ? Math.max(...items.map((i) => i.score)) : 0;
+  const displayValue = total > 0
+    ? groomingCount > 0
+      ? (groomingCount / total) * 100
+      : (normalCount / total) * 100
+    : 0;
+  const displayLabel = groomingCount > 0 ? "Pesan Grooming" : "Pesan Normal";
   const latestItem = total > 0 ? items[total - 1] : null;
 
   // Tentukan warna berdasarkan status terburuk
@@ -67,8 +73,8 @@ export default function ResultSidebar({ items }: ResultSidebarProps) {
               <div className="absolute inset-0 rounded-full blur-3xl opacity-20" style={{ backgroundColor: config.path }} />
               <div className="relative">
                 <CircularProgressbar
-                  value={total > 0 ? (groomingCount / total) * 100 : 0}
-                  text={`${total > 0 ? ((groomingCount / total) * 100).toFixed(0) : 0}%`}
+                  value={displayValue}
+                  text={`${displayValue.toFixed(0)}%`}
                   strokeWidth={8}
                   styles={buildStyles({
                     pathColor: config.path,
@@ -79,7 +85,7 @@ export default function ResultSidebar({ items }: ResultSidebarProps) {
                 />
                 <div className="absolute inset-0 flex flex-col items-center justify-center pt-14">
                   <span className={`text-[9px] font-black uppercase tracking-widest ${config.text}`}>
-                    Pesan Berbahaya
+                    {displayLabel}
                   </span>
                 </div>
               </div>
