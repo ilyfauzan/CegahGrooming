@@ -135,7 +135,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             onClick={() => warningCount > 0 && onFocusStatus?.("WARNING")}
             disabled={warningCount === 0 || loading}
             type="button"
-            className={`w-full flex justify-between items-center py-1.5 text-left transition-all duration-300 ${
+            className={`w-full flex justify-between items-center py-1.5 px-0 bg-transparent border-none text-left transition-all duration-300 ${
               warningCount > 0 && !loading
                 ? "hover:text-yellow-300 cursor-pointer active:scale-[0.98] group/stat"
                 : "opacity-60 cursor-not-allowed"
@@ -157,7 +157,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             onClick={() => groomingCount > 0 && onFocusStatus?.("GROOMING")}
             disabled={groomingCount === 0 || loading}
             type="button"
-            className={`w-full flex justify-between items-center py-1.5 text-left transition-all duration-300 ${
+            className={`w-full flex justify-between items-center py-1.5 px-0 bg-transparent border-none text-left transition-all duration-300 ${
               groomingCount > 0 && !loading
                 ? "hover:text-red-300 cursor-pointer active:scale-[0.98] group/stat"
                 : "opacity-60 cursor-not-allowed"
