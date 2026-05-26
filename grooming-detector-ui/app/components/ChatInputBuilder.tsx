@@ -58,17 +58,27 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       // Pesan enkripsi & keamanan
       /pesan dan panggilan.*terenkripsi/i,
       /messages.*end-to-end encrypted/i,
-      // Media omitted
+      // Media omitted (English)
       /image omitted/i,
       /sticker omitted/i,
       /video omitted/i,
       /audio omitted/i,
       /document omitted/i,
       /gif omitted/i,
+      // Media omitted (Indonesian)
+      /gambar tidak disertakan/i,
+      /foto tidak disertakan/i,
+      /video tidak disertakan/i,
+      /audio tidak disertakan/i,
+      /stiker tidak disertakan/i,
+      /dokumen tidak disertakan/i,
+      /gif tidak disertakan/i,
       /foto dihilangkan/i,
       /video dihilangkan/i,
+      /gambar dihilangkan/i,
       /\<Media tidak disertakan\>/i,
       /\<Media tidak ada\>/i,
+      /tidak disertakan/i,
       // Pesan dihapus
       /pesan ini dihapus/i,
       /this message was deleted/i,
