@@ -107,8 +107,10 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
     return rawContent
       .split(/\n/)
       .map((line) => {
-        // Hapus BOM dan karakter kontrol tak kasat mata
-        let clean = line.replace(/^\uFEFF/, "").trim();
+        // Hapus BOM dan SEMUA karakter tak kasat mata WA (U+200E, U+200F, U+200B, U+FEFF, dll)
+        let clean = line
+          .replace(/[\u200E\u200F\u200B\u200C\u200D\uFEFF\u202A\u202B\u202C\u202D\u202E]/g, "")
+          .trim();
         if (!clean) return "";
 
         // Hapus timestamp WA berbagai format:
@@ -118,11 +120,17 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
           ""
         );
 
+        // Cek sistem WA SEBELUM name stripping (untuk pesan sistem tanpa pengirim)
+        const isSystemBeforeStrip = WA_SYSTEM_PATTERNS.some((pattern) =>
+          pattern.test(clean)
+        );
+        if (isSystemBeforeStrip) return "";
+
         // Hapus nama pengirim (format "Nama: pesan" atau "~ Nama: pesan")
         clean = clean.replace(/^~\s*/, "");
         if (clean.includes(": ")) clean = clean.split(": ").slice(1).join(": ");
 
-        // Periksa apakah ini pesan sistem WA
+        // Cek sistem WA SESUDAH name stripping
         const isSystemMsg = WA_SYSTEM_PATTERNS.some((pattern) =>
           pattern.test(clean)
         );
