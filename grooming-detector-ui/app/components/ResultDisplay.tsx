@@ -16,6 +16,7 @@ export default function ResultSidebar({ items, loading = false }: ResultSidebarP
   const warningCount = items.filter((i) => i.status === "WARNING").length;
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
   const highestScore = total > 0 ? Math.max(...items.map((i) => i.score)) : 0;
+  const latestItem = total > 0 ? items[total - 1] : null;
   const displayValue = loading
     ? (latestItem?.score || 0) * 100          // real-time: skor pesan terakhir
     : total > 0
@@ -26,7 +27,6 @@ export default function ResultSidebar({ items, loading = false }: ResultSidebarP
   const displayLabel = loading
     ? "Skor Pesan"
     : groomingCount > 0 ? "Pesan Grooming" : "Pesan Normal";
-  const latestItem = total > 0 ? items[total - 1] : null;
 
   // Tentukan warna berdasarkan status terburuk
   const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
