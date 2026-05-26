@@ -121,11 +121,11 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
       >
         <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Statistik</h4>
         <div className="space-y-3">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center py-1.5 px-2 -mx-2">
             <span className="text-xs text-slate-400">Total Pesan</span>
             <span className="text-sm font-black text-white">{total}</span>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center py-1.5 px-2 -mx-2">
             <span className="text-xs text-blue-400 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-blue-500" /> Normal
             </span>
@@ -135,7 +135,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             onClick={() => warningCount > 0 && onFocusStatus?.("WARNING")}
             disabled={warningCount === 0 || loading}
             type="button"
-            className={`w-full flex justify-between items-center p-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
+            className={`w-full flex justify-between items-center py-1.5 px-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
               warningCount > 0 && !loading
                 ? "hover:bg-yellow-500/10 cursor-pointer active:scale-[0.98] group/stat"
                 : "opacity-60 cursor-not-allowed"
@@ -157,7 +157,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             onClick={() => groomingCount > 0 && onFocusStatus?.("GROOMING")}
             disabled={groomingCount === 0 || loading}
             type="button"
-            className={`w-full flex justify-between items-center p-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
+            className={`w-full flex justify-between items-center py-1.5 px-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
               groomingCount > 0 && !loading
                 ? "hover:bg-red-500/10 cursor-pointer active:scale-[0.98] group/stat"
                 : "opacity-60 cursor-not-allowed"
