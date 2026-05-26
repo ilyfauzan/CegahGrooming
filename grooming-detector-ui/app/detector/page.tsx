@@ -13,6 +13,26 @@ export default function DetectorDashboard() {
   const [view, setView] = useState<ViewState>("paste");
   const [chatResults, setChatResults] = useState<ChatBubbleItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [focusTrigger, setFocusTrigger] = useState<{ index: number; timestamp: number } | null>(null);
+
+  const handleFocusStatus = (status: "WARNING" | "GROOMING") => {
+    let targetIndex = -1;
+    let highestScore = -1;
+
+    chatResults.forEach((item, idx) => {
+      if (item.status === status && item.score > highestScore) {
+        highestScore = item.score;
+        targetIndex = idx;
+      }
+    });
+
+    if (targetIndex !== -1) {
+      setFocusTrigger({
+        index: targetIndex,
+        timestamp: Date.now(),
+      });
+    }
+  };
 
   // Session ID untuk Backend
   const getSessionId = () => {
@@ -216,6 +236,7 @@ export default function DetectorDashboard() {
                   onAppend={handleAppend}
                   onSendMessage={(text) => processMessages([text], true)}
                   loading={loading}
+                  focusTrigger={focusTrigger}
                 />
               </div>
 
@@ -224,6 +245,7 @@ export default function DetectorDashboard() {
                 <ResultSidebar
                   items={chatResults}
                   loading={loading}
+                  onFocusStatus={handleFocusStatus}
                 />
               </div>
             </div>

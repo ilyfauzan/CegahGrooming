@@ -16,9 +16,17 @@ interface ChatBubbleListProps {
   onSendMessage: (text: string) => void;
   loading: boolean;
   className?: string;
+  focusTrigger?: { index: number; timestamp: number } | null;
 }
 
-export default function ChatBubbleList({ items, onAppend, onSendMessage, loading, className = "" }: ChatBubbleListProps) {
+export default function ChatBubbleList({
+  items,
+  onAppend,
+  onSendMessage,
+  loading,
+  className = "",
+  focusTrigger,
+}: ChatBubbleListProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [inputText, setInputText] = useState("");
@@ -29,6 +37,35 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [items]);
+
+  // Auto-focus & scroll ke bubble spesifik berdasarkan statistik
+  useEffect(() => {
+    if (focusTrigger) {
+      const idx = focusTrigger.index;
+      setExpandedIndex(idx);
+      
+      setTimeout(() => {
+        const element = document.getElementById(`chat-bubble-${idx}`);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "center" });
+          
+          // Efek visual highlight premium
+          const itemStatus = items[idx]?.status;
+          const borderHighlight = itemStatus === "GROOMING" 
+            ? "shadow-[0_0_20px_rgba(239,68,68,0.5)]" 
+            : "shadow-[0_0_20px_rgba(245,158,11,0.5)]";
+          
+          element.classList.add("scale-[1.02]", "transition-all", "duration-300");
+          element.classList.add(borderHighlight);
+          
+          setTimeout(() => {
+            element.classList.remove("scale-[1.02]");
+            element.classList.remove(borderHighlight);
+          }, 2000);
+        }
+      }, 150);
+    }
+  }, [focusTrigger]);
 
   const handleSend = () => {
     if (!inputText.trim() || loading) return;
@@ -105,6 +142,7 @@ export default function ChatBubbleList({ items, onAppend, onSendMessage, loading
           return (
             <div
               key={index}
+              id={`chat-bubble-${index}`}
               onClick={() => setExpandedIndex(isExpanded ? null : index)}
               className={`relative rounded-2xl border-l-4 ${config.borderColor} ${config.bgColor} p-4 cursor-pointer hover:brightness-110 transition-all duration-300 group`}
             >

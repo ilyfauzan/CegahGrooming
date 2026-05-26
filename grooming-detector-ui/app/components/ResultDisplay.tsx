@@ -7,9 +7,10 @@ import { ChatBubbleItem } from "./ChatBubbleList";
 interface ResultSidebarProps {
   items: ChatBubbleItem[];
   loading?: boolean;
+  onFocusStatus?: (status: "WARNING" | "GROOMING") => void;
 }
 
-export default function ResultSidebar({ items, loading = false }: ResultSidebarProps) {
+export default function ResultSidebar({ items, loading = false, onFocusStatus }: ResultSidebarProps) {
   // Hitung statistik
   const total = items.length;
   const groomingCount = items.filter((i) => i.status === "GROOMING").length;
@@ -130,18 +131,50 @@ export default function ResultSidebar({ items, loading = false }: ResultSidebarP
             </span>
             <span className="text-sm font-bold text-blue-400">{normalCount}</span>
           </div>
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-yellow-400 flex items-center gap-1.5">
+          <button
+            onClick={() => warningCount > 0 && onFocusStatus?.("WARNING")}
+            disabled={warningCount === 0 || loading}
+            type="button"
+            className={`w-full flex justify-between items-center p-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
+              warningCount > 0 && !loading
+                ? "hover:bg-yellow-500/10 cursor-pointer active:scale-[0.98] group/stat"
+                : "opacity-60 cursor-not-allowed"
+            }`}
+          >
+            <span className="text-xs text-yellow-400 flex items-center gap-1.5 group-hover/stat:translate-x-1 transition-transform duration-300">
               <span className="w-2 h-2 rounded-full bg-yellow-500" /> Warning
             </span>
-            <span className="text-sm font-bold text-yellow-400">{warningCount}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-red-400 flex items-center gap-1.5">
+            <span className="text-sm font-bold text-yellow-400 flex items-center gap-1">
+              {warningCount}
+              {warningCount > 0 && !loading && (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+            </span>
+          </button>
+          <button
+            onClick={() => groomingCount > 0 && onFocusStatus?.("GROOMING")}
+            disabled={groomingCount === 0 || loading}
+            type="button"
+            className={`w-full flex justify-between items-center p-2 -mx-2 rounded-xl transition-all duration-300 text-left ${
+              groomingCount > 0 && !loading
+                ? "hover:bg-red-500/10 cursor-pointer active:scale-[0.98] group/stat"
+                : "opacity-60 cursor-not-allowed"
+            }`}
+          >
+            <span className="text-xs text-red-400 flex items-center gap-1.5 group-hover/stat:translate-x-1 transition-transform duration-300">
               <span className="w-2 h-2 rounded-full bg-red-500" /> Grooming
             </span>
-            <span className="text-sm font-bold text-red-400">{groomingCount}</span>
-          </div>
+            <span className="text-sm font-bold text-red-400 flex items-center gap-1">
+              {groomingCount}
+              {groomingCount > 0 && !loading && (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+            </span>
+          </button>
         </div>
       </div>
 
