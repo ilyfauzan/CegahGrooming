@@ -68,10 +68,10 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
     final_prob_grooming = (0.5 * prob_single) + (0.5 * prob_context)
     final_prob_normal = 1.0 - final_prob_grooming
 
-    # HUMANE THRESHOLD (Optimal: 0.5 / 0.31)
+    # HUMANE THRESHOLD (Optimal: 0.50 / 0.40)
     if final_prob_grooming >= 0.50:
         label = "GROOMING"
-    elif final_prob_grooming >= 0.31:
+    elif final_prob_grooming >= 0.40:
         label = "WARNING"
     else:
         label = "NORMAL"

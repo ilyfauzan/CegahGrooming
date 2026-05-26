@@ -43,40 +43,92 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
   };
 
   const parseTextContent = (rawContent: string): string[] => {
+    // Pola sistem WA yang harus dibuang (case-insensitive)
+    const WA_SYSTEM_PATTERNS: RegExp[] = [
+      // Panggilan suara & video
+      /telepon suara tak terjawab/i,
+      /telepon video tak terjawab/i,
+      /ketuk untuk menelepon balik/i,
+      /missed voice call/i,
+      /missed video call/i,
+      /tap to call back/i,
+      /telepon suara\./i,
+      /telepon video\./i,
+      /tidak dijawab/i,
+      // Pesan enkripsi & keamanan
+      /pesan dan panggilan.*terenkripsi/i,
+      /messages.*end-to-end encrypted/i,
+      // Media omitted
+      /image omitted/i,
+      /sticker omitted/i,
+      /video omitted/i,
+      /audio omitted/i,
+      /document omitted/i,
+      /gif omitted/i,
+      /foto dihilangkan/i,
+      /video dihilangkan/i,
+      /\<Media tidak disertakan\>/i,
+      /\<Media tidak ada\>/i,
+      // Pesan dihapus
+      /pesan ini dihapus/i,
+      /this message was deleted/i,
+      /you deleted this message/i,
+      // Perubahan grup
+      /bergabung menggunakan tautan undangan/i,
+      /menambahkan/i,
+      /menghapus/i,
+      /mengubah ikon grup/i,
+      /mengubah nama grup/i,
+      /membuat grup/i,
+      /meninggalkan grup/i,
+      /joined using this group/i,
+      /changed the group/i,
+      /added you/i,
+      /left/i,
+      // Link
+      /https?:\/\//i,
+      /www\./i,
+      // Sistem lainnya
+      /anda sekarang terhubung/i,
+      /you're now connected/i,
+      /tap to learn more/i,
+    ];
+
     return rawContent
       .split(/\n/)
       .map((line) => {
-        // Hapus timestamp WhatsApp (misal: [14/05/26 12.00.00] atau format tanpa kurung siku)
-        let clean = line.replace(
-          /^\[?\d{2}\/\d{2}\/\d{2,4}[, ]\s?\d{2}[.:]\d{2}(?:[.:]\d{2})?\]?\s*/,
+        // Hapus BOM dan karakter kontrol tak kasat mata
+        let clean = line.replace(/^\uFEFF/, "").trim();
+        if (!clean) return "";
+
+        // Hapus timestamp WA berbagai format:
+        // [14/05/26, 12.00.00]  /  14/05/26, 12:00  /  5/26/2024, 12:00 AM
+        clean = clean.replace(
+          /^\[?\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}[,\s]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:\s?[AP]M)?\]?\s*[-–]?\s*/i,
           ""
         );
-        // Hapus nama pengirim (format "Nama: pesan")
+
+        // Hapus nama pengirim (format "Nama: pesan" atau "~ Nama: pesan")
+        clean = clean.replace(/^~\s*/, "");
         if (clean.includes(": ")) clean = clean.split(": ").slice(1).join(": ");
 
-        // Filter system messages
-        const systemMessages = [
-          "pesan dan panggilan terenkripsi",
-          "image omitted",
-          "sticker omitted",
-          "video omitted",
-          "audio omitted",
-          "pesan ini dihapus",
-          "https://",
-          "http://",
-          "www.",
-        ];
-        const isSystem = systemMessages.some((msg) =>
-          clean.toLowerCase().includes(msg)
+        // Periksa apakah ini pesan sistem WA
+        const isSystemMsg = WA_SYSTEM_PATTERNS.some((pattern) =>
+          pattern.test(clean)
         );
-        if (isSystem) return "";
+        if (isSystemMsg) return "";
 
         // Bersihkan tanda petik di awal/akhir dan koma
         clean = clean.trim();
-        clean = clean.replace(/^["']+/, "");
-        clean = clean.replace(/["']+$/, "");
+        clean = clean.replace(/^["'`]+/, "");
+        clean = clean.replace(/["'`]+$/, "");
         clean = clean.replace(/,\s*$/, "");
-        return clean.trim();
+        clean = clean.trim();
+
+        // Buang baris yang terlalu pendek (≤ 2 karakter) — kemungkinan noise/emoji saja
+        if (clean.length <= 2) return "";
+
+        return clean;
       })
       .filter((line) => line !== "");
   };
