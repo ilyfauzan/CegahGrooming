@@ -6,21 +6,26 @@ import { ChatBubbleItem } from "./ChatBubbleList";
 
 interface ResultSidebarProps {
   items: ChatBubbleItem[];
+  loading?: boolean;
 }
 
-export default function ResultSidebar({ items }: ResultSidebarProps) {
+export default function ResultSidebar({ items, loading = false }: ResultSidebarProps) {
   // Hitung statistik
   const total = items.length;
   const groomingCount = items.filter((i) => i.status === "GROOMING").length;
   const warningCount = items.filter((i) => i.status === "WARNING").length;
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
   const highestScore = total > 0 ? Math.max(...items.map((i) => i.score)) : 0;
-  const displayValue = total > 0
-    ? groomingCount > 0
-      ? (groomingCount / total) * 100
-      : (normalCount / total) * 100
-    : 0;
-  const displayLabel = groomingCount > 0 ? "Pesan Grooming" : "Pesan Normal";
+  const displayValue = loading
+    ? (latestItem?.score || 0) * 100          // real-time: skor pesan terakhir
+    : total > 0
+      ? groomingCount > 0
+        ? (groomingCount / total) * 100       // hasil akhir: % grooming
+        : (normalCount / total) * 100         // hasil akhir: % normal
+      : 0;
+  const displayLabel = loading
+    ? "Skor Pesan"
+    : groomingCount > 0 ? "Pesan Grooming" : "Pesan Normal";
   const latestItem = total > 0 ? items[total - 1] : null;
 
   // Tentukan warna berdasarkan status terburuk

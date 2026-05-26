@@ -223,6 +223,7 @@ export default function DetectorDashboard() {
               <div className="lg:col-span-1">
                 <ResultSidebar
                   items={chatResults}
+                  loading={loading}
                 />
               </div>
             </div>
