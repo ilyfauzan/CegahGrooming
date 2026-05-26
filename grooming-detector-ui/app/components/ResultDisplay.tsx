@@ -34,14 +34,18 @@ export default function ResultSidebar({ items, loading = false }: ResultSidebarP
         ? "Pesan Warning"
         : "Pesan Normal";
 
-  // Tentukan warna berdasarkan status terburuk
+  // Tentukan status dan warna
   const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
+  const currentStatus = loading
+    ? (latestItem?.status || "NORMAL")
+    : worstStatus;
+
   const colorMap = {
     GROOMING: { path: "#ef4444", text: "text-red-400", border: "border-red-500/50", label: "GROOMING TERDETEKSI" },
     WARNING: { path: "#f59e0b", text: "text-yellow-400", border: "border-yellow-500/50", label: "KEWASPADAAN AKTIF" },
     NORMAL: { path: "#60a5fa", text: "text-blue-400", border: "border-blue-500/30", label: "PERCAKAPAN AMAN" },
   };
-  const config = colorMap[worstStatus];
+  const config = colorMap[currentStatus];
 
   // Download CSV
   const downloadCSV = () => {
