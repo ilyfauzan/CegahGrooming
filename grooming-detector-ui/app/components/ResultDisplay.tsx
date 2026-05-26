@@ -144,10 +144,10 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             <span className="text-xs text-yellow-400 flex items-center gap-1.5 group-hover/stat:translate-x-1 transition-transform duration-300">
               <span className="w-2 h-2 rounded-full bg-yellow-500" /> Warning
             </span>
-            <span className="text-sm font-bold text-yellow-400 flex items-center gap-1">
+            <span className="text-sm font-bold text-yellow-400 flex items-center relative">
               {warningCount}
               {warningCount > 0 && !loading && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 absolute left-full ml-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/stat:opacity-100 group-hover/stat:translate-x-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               )}
@@ -166,10 +166,10 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             <span className="text-xs text-red-400 flex items-center gap-1.5 group-hover/stat:translate-x-1 transition-transform duration-300">
               <span className="w-2 h-2 rounded-full bg-red-500" /> Grooming
             </span>
-            <span className="text-sm font-bold text-red-400 flex items-center gap-1">
+            <span className="text-sm font-bold text-red-400 flex items-center relative">
               {groomingCount}
               {groomingCount > 0 && !loading && (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-0 group-hover/stat:opacity-100 transition-opacity duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 absolute left-full ml-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/stat:opacity-100 group-hover/stat:translate-x-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
               )}
