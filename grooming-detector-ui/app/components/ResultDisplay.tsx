@@ -18,22 +18,8 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
   const highestScore = total > 0 ? Math.max(...items.map((i) => i.score)) : 0;
   const latestItem = total > 0 ? items[total - 1] : null;
-  const displayValue = loading
-    ? (latestItem?.score || 0) * 100
-    : total > 0
-      ? groomingCount > 0
-        ? (groomingCount / total) * 100       // prioritas 1: % grooming
-        : warningCount > 0
-          ? (warningCount / total) * 100      // prioritas 2: % warning
-          : (normalCount / total) * 100       // prioritas 3: % normal
-      : 0;
-  const displayLabel = loading
-    ? "Skor Pesan"
-    : groomingCount > 0
-      ? "Pesan Grooming"
-      : warningCount > 0
-        ? "Pesan Warning"
-        : "Pesan Normal";
+  const displayValue = total > 0 ? highestScore * 100 : 0;
+  const displayLabel = "Skor Hybrid";
 
   // Tentukan status dan warna
   const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
