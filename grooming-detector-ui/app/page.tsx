@@ -36,9 +36,9 @@ export default function LandingPage() {
           {features.map((f, i) => (
             <div 
               key={i} 
-              className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:border-blue-500/30 transition-all group"
+              className="p-8 rounded-3xl bg-slate-800/40 border border-slate-700/50 hover:border-blue-500/30 transition-all group text-center"
             >
-              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg mb-4 ${f.color}`}>
+              <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg mb-4 mx-auto ${f.color}`}>
                 {f.icon}
               </div>
               <h3 className="text-lg font-black mb-3 text-slate-100 group-hover:text-blue-400 transition-colors">

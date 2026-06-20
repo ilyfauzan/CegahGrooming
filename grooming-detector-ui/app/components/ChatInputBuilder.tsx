@@ -199,8 +199,9 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
       {/* Header Actions */}
-      <div className="flex items-center justify-between px-2">
-        <div className="flex flex-wrap gap-2">
+      <div className="px-2 space-y-2">
+        {/* Row 1: main action buttons */}
+        <div className="flex gap-2">
           <button
             onClick={handlePaste}
             className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-xl text-blue-400 text-[10px] font-black tracking-widest hover:bg-blue-500/20 transition-all uppercase"
@@ -224,16 +225,19 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
               onChange={handleFileUpload}
             />
           </label>
+        </div>
 
+        {/* Row 2: bersihkan + counter */}
+        <div className="flex items-center justify-between">
           <button
             onClick={clearAll}
-            className="px-4 py-2 text-slate-500 text-[10px] font-black tracking-widest hover:text-red-400 transition-all uppercase"
+            className="px-3 py-1.5 text-slate-500 text-[10px] font-black tracking-widest hover:text-red-400 transition-all uppercase border border-transparent hover:border-red-500/30 rounded-lg"
           >
             Bersihkan
           </button>
-        </div>
-        <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeMessages < 2 ? 'text-amber-500' : 'text-emerald-500'}`}>
-          {activeMessages} Pesan Terisi
+          <div className={`text-[10px] font-black uppercase tracking-widest transition-colors ${activeMessages < 2 ? 'text-amber-500' : 'text-emerald-500'}`}>
+            {activeMessages} Pesan Terisi
+          </div>
         </div>
       </div>
 
@@ -277,8 +281,8 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       {/* Analyze Button */}
       <div className="pt-4 space-y-4">
         {activeMessages < 1 && (
-          <div className="flex items-center justify-center gap-2 text-amber-500/80 animate-pulse">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex flex-wrap items-center justify-center gap-1 text-amber-500/80 animate-pulse text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
             <p className="text-[10px] font-black uppercase tracking-widest">
