@@ -34,7 +34,6 @@ export default function DetectorDashboard() {
     }
   };
 
-  // Session ID untuk Backend
   const getSessionId = () => {
     if (typeof window !== "undefined") {
       let id = localStorage.getItem("chat_session_id");
@@ -47,7 +46,6 @@ export default function DetectorDashboard() {
     return "";
   };
 
-  // Proses array pesan: kirim satu per satu ke backend, kumpulkan hasil
   const processMessages = async (messages: string[], isAppend: boolean = false) => {
     if (loading) return;
     setLoading(true);
@@ -56,7 +54,6 @@ export default function DetectorDashboard() {
       const sessionId = getSessionId();
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-      // Jika bukan append (analisis baru), reset konteks backend
       if (!isAppend) {
         await fetch(`${apiUrl}/reset`, {
           method: "POST",
@@ -68,10 +65,8 @@ export default function DetectorDashboard() {
 
       const batchId = "det_" + Math.random().toString(36).substring(2, 9);
 
-      // Sederhanakan splitting: 1 baris = 1 bubble
       const rawLines: string[] = [];
       messages.forEach((line) => {
-        // Hanya pecah jika baris sangat panjang (> 400 karakter)
         if (line.length > 400) {
           let remaining = line;
           while (remaining.length > 400) {
@@ -86,15 +81,12 @@ export default function DetectorDashboard() {
         }
       });
 
-      // Bersihkan tanda petik dan koma di akhir
       const lines = rawLines
         .map((l) => l.replace(/^["']+/, "").replace(/["']+$/, "").replace(/,\s*$/, "").trim())
         .filter((l) => l !== "");
 
-      // Langsung tampilkan UI hasil (bubble akan muncul satu per satu)
       setView("results");
 
-      // Kirim satu per satu ke backend
       for (const line of lines) {
         const response = await fetch(`${apiUrl}/predict`, {
           method: "POST",
@@ -113,10 +105,8 @@ export default function DetectorDashboard() {
           translated: data.translated || line,
         };
 
-        // Update UI real-time: setiap pesan langsung muncul sebagai bubble
         setChatResults((prev) => [...prev, newItem]);
 
-        // Simpan ke Supabase
         try {
           await supabase.from("history_detection").insert({
             session_id: sessionId,
@@ -129,7 +119,6 @@ export default function DetectorDashboard() {
           console.error("DB Error:", dbErr);
         }
 
-        // Small delay agar UI sempat render
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
 
@@ -141,12 +130,10 @@ export default function DetectorDashboard() {
     }
   };
 
-  // Handler: pesan baru dari PasteArea (analisis baru)
   const handleMessagesReady = (messages: string[]) => {
     processMessages(messages, false);
   };
 
-  // Handler: tambah pesan dari clipboard (append ke session yang sudah ada)
   const handleAppend = async () => {
     if (loading) return;
     try {
@@ -169,7 +156,6 @@ export default function DetectorDashboard() {
     }
   };
 
-  // Handler: analisis baru (reset semua, kembali ke State 1)
   const handleNewAnalysis = async () => {
     if (loading) return;
     if (chatResults.length > 0 && !confirm("Mulai analisis baru? Data saat ini akan dihapus.")) return;
@@ -195,7 +181,6 @@ export default function DetectorDashboard() {
       <div className="max-w-6xl mx-auto">
         <Navbar />
 
-        {/* STATE 1: Paste Area */}
         {view === "paste" && (
           <div className="flex-1 flex flex-col justify-center animate-in fade-in zoom-in-95 duration-700 py-10">
             <div className="text-center mb-10 space-y-3">
@@ -210,10 +195,8 @@ export default function DetectorDashboard() {
           </div>
         )}
 
-        {/* STATE 2: Results (Chat Bubbles + Sidebar) */}
         {view === "results" && (
           <div className="mt-6 space-y-4">
-            {/* Tombol Analisis Baru di atas */}
             <div className="flex justify-end">
               <button
                 onClick={handleNewAnalysis}
@@ -227,7 +210,6 @@ export default function DetectorDashboard() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Kiri: Chat Bubbles */}
               <div className="lg:col-span-2 bg-slate-800/50 rounded-3xl border border-slate-700 shadow-2xl overflow-hidden h-fit"
                 style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
               >
@@ -240,7 +222,6 @@ export default function DetectorDashboard() {
                 />
               </div>
 
-              {/* Kanan: Sidebar Ringkasan */}
               <div className="lg:col-span-1">
                 <ResultSidebar
                   items={chatResults}
@@ -252,7 +233,6 @@ export default function DetectorDashboard() {
           </div>
         )}
 
-        {/* Footer */}
         <footer className="mt-20 py-10 border-t border-slate-800/50 text-center">
           <p className="text-slate-500 text-[10px] md:text-xs font-medium tracking-widest uppercase opacity-60">
             &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System

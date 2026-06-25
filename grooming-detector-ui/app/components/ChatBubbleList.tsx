@@ -31,33 +31,30 @@ export default function ChatBubbleList({
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
   const [inputText, setInputText] = useState("");
 
-  // Auto-scroll ke bawah saat ada item baru
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [items]);
 
-  // Auto-focus & scroll ke bubble spesifik berdasarkan statistik
   useEffect(() => {
     if (focusTrigger) {
       const idx = focusTrigger.index;
       setExpandedIndex(idx);
-      
+
       setTimeout(() => {
         const element = document.getElementById(`chat-bubble-${idx}`);
         if (element) {
           element.scrollIntoView({ behavior: "smooth", block: "center" });
-          
-          // Efek visual highlight premium
+
           const itemStatus = items[idx]?.status;
-          const borderHighlight = itemStatus === "GROOMING" 
-            ? "shadow-[0_0_20px_rgba(239,68,68,0.5)]" 
+          const borderHighlight = itemStatus === "GROOMING"
+            ? "shadow-[0_0_20px_rgba(239,68,68,0.5)]"
             : "shadow-[0_0_20px_rgba(245,158,11,0.5)]";
-          
+
           element.classList.add("scale-[1.02]", "transition-all", "duration-300");
           element.classList.add(borderHighlight);
-          
+
           setTimeout(() => {
             element.classList.remove("scale-[1.02]");
             element.classList.remove(borderHighlight);
@@ -116,7 +113,6 @@ export default function ChatBubbleList({
 
   return (
     <div className={`flex flex-col ${className}`}>
-      {/* Header */}
       <div className="flex items-center justify-between p-4 md:p-5 border-b border-slate-700 bg-slate-800/80 rounded-t-3xl">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
@@ -129,7 +125,6 @@ export default function ChatBubbleList({
         </span>
       </div>
 
-      {/* Chat Area — Scroll Independen */}
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 scroll-smooth"
@@ -146,7 +141,6 @@ export default function ChatBubbleList({
               onClick={() => setExpandedIndex(isExpanded ? null : index)}
               className={`relative rounded-2xl border-l-4 ${config.borderColor} ${config.bgColor} p-4 cursor-pointer hover:brightness-110 transition-all duration-300 group`}
             >
-              {/* Bubble Header */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 flex-1 min-w-0">
                   <span className="text-[10px] font-black text-slate-600 mt-0.5 shrink-0">
@@ -161,10 +155,8 @@ export default function ChatBubbleList({
                 </span>
               </div>
 
-              {/* Detail Skor — Muncul saat diklik */}
               {isExpanded && (
                 <div className="mt-3 pt-3 border-t border-slate-700/50 space-y-2 animate-in fade-in duration-200">
-                  {/* Standalone */}
                   <div className="flex items-center justify-between text-[10px]">
                     <span className="text-slate-500 font-bold uppercase tracking-wide">Standalone</span>
                     <span className="text-slate-400 font-mono">{(item.standalone_score * 100).toFixed(1)}%</span>
@@ -173,7 +165,6 @@ export default function ChatBubbleList({
                     <div className="h-full bg-blue-500 rounded-full transition-all duration-700" style={{ width: `${item.standalone_score * 100}%` }} />
                   </div>
 
-                  {/* Context */}
                   <div className="flex items-center justify-between text-[10px] mt-1">
                     <span className="text-slate-500 font-bold uppercase tracking-wide">Context (Window)</span>
                     <span className="text-slate-400 font-mono">{(item.context_score * 100).toFixed(1)}%</span>
@@ -182,17 +173,13 @@ export default function ChatBubbleList({
                     <div className="h-full bg-indigo-500 rounded-full transition-all duration-700" style={{ width: `${item.context_score * 100}%` }} />
                   </div>
 
-                  {/* Final Hybrid */}
                   <div className="flex items-center justify-between text-[10px] mt-1">
                     <span className="text-slate-500 font-bold uppercase tracking-wide">Hybrid Score</span>
                     <span className={`font-mono font-black ${config.labelColor}`}>{(item.score * 100).toFixed(1)}%</span>
                   </div>
-
-
                 </div>
               )}
 
-              {/* Hint klik */}
               {!isExpanded && (
                 <p className="text-[9px] text-slate-600 mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   Klik untuk lihat detail skor →
@@ -202,7 +189,6 @@ export default function ChatBubbleList({
           );
         })}
 
-        {/* Loading indicator saat processing */}
         {loading && (
           <div className="flex items-center gap-3 p-4 rounded-2xl bg-slate-800/50 border border-slate-700/30 animate-pulse">
             <div className="w-2 h-2 rounded-full bg-blue-500 animate-bounce" />
@@ -213,7 +199,6 @@ export default function ChatBubbleList({
         )}
       </div>
 
-      {/* Footer — Input Bar & Tambah Pesan (Hanya muncul jika TIDAK sedang loading) */}
       {!loading && (
         <div className="p-4 bg-slate-800/40 border-t border-slate-700/50 rounded-b-3xl">
           <div className="flex items-end gap-2 bg-slate-900/80 border border-slate-700/50 rounded-2xl p-2 focus-within:border-blue-500/50 transition-all shadow-inner">

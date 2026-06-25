@@ -11,7 +11,6 @@ interface ResultSidebarProps {
 }
 
 export default function ResultSidebar({ items, loading = false, onFocusStatus }: ResultSidebarProps) {
-  // Hitung statistik
   const total = items.length;
   const groomingCount = items.filter((i) => i.status === "GROOMING").length;
   const warningCount = items.filter((i) => i.status === "WARNING").length;
@@ -21,7 +20,6 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const displayValue = total > 0 ? highestScore * 100 : 0;
   const displayLabel = "Skor Hybrid";
 
-  // Tentukan status dan warna
   const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
   const currentStatus = loading
     ? (latestItem?.status || "NORMAL")
@@ -34,7 +32,6 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   };
   const config = colorMap[currentStatus];
 
-  // Download CSV
   const downloadCSV = () => {
     if (items.length === 0) return alert("Tidak ada data untuk diunduh.");
     const headers = ["No", "Percakapan", "Terjemahan", "Skor Standalone", "Skor Konteks", "Skor Hybrid", "Status"];
@@ -60,7 +57,6 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
 
   return (
     <div className="sticky top-10 space-y-6">
-      {/* CircularProgressbar */}
       <div className={`p-5 md:p-8 rounded-3xl border shadow-2xl transition-all duration-700 bg-slate-800/50 ${config.border}`}
         style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
       >
@@ -68,7 +64,6 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
           Ringkasan Analisis
         </h3>
 
-        {/* Gauge */}
         <div className="flex flex-col items-center">
           <div className="w-full max-w-[200px] mb-6">
             <div className="relative group">
@@ -94,14 +89,12 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             </div>
           </div>
 
-          {/* Status Badge */}
           <div className={`px-4 py-1.5 rounded-xl text-[10px] font-black tracking-wider ${config.text} bg-slate-900/60 border ${config.border}`}>
             {config.label}
           </div>
         </div>
       </div>
 
-      {/* Statistik */}
       <div className="p-5 rounded-3xl border border-slate-700 bg-slate-800/50 space-y-4"
         style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
       >
@@ -164,9 +157,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="space-y-3">
-        {/* Download CSV */}
         <button
           onClick={downloadCSV}
           className="w-full flex items-center justify-center gap-2 py-3 bg-green-600/10 hover:bg-green-600 text-green-400 hover:text-white border border-green-500/30 rounded-2xl text-xs font-black transition-all active:scale-[0.98] shadow-lg hover:shadow-green-900/20"

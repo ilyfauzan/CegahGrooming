@@ -36,7 +36,6 @@ export default function HistoryPage() {
   const fetchHistory = async () => {
     setLoading(true);
 
-    // Ambil session_id untuk privasi (Level 1)
     const sessionId = typeof window !== "undefined" ? localStorage.getItem("chat_session_id") : null;
 
     if (!supabase) {
@@ -50,7 +49,6 @@ export default function HistoryPage() {
       .select("*")
       .order("created_at", { ascending: false });
 
-    // Hanya ambil data milik user ini saja
     if (sessionId) {
       query = query.eq("session_id", sessionId);
     }
@@ -71,8 +69,7 @@ export default function HistoryPage() {
 
     data.forEach((item) => {
       const bId = item.batch_id || "single_" + item.id;
-      
-      // Jika batch_id ini ada di daftar yang disembunyikan, lewati
+
       if (hiddenLogs.includes(bId)) return;
 
       if (!groups[bId]) {
@@ -81,8 +78,8 @@ export default function HistoryPage() {
           mode: item.mode || "single",
           timestamp: item.created_at,
           items: [],
-          maxScore: item.score, // Skor dari baris paling baru (hasil akhir batch)
-          overallStatus: item.status, // Status dari baris paling baru (hasil akhir batch)
+          maxScore: item.score,
+          overallStatus: item.status,
         };
       }
       groups[bId].items.push(item);
@@ -96,8 +93,7 @@ export default function HistoryPage() {
   const removeGroupLocally = (batchId: string) => {
     if (confirm("Hapus log ini dari tampilan? (Data di database tetap ada)")) {
       setHistoryGroups(prev => prev.filter(g => g.batch_id !== batchId));
-      
-      // Simpan batchId ke localStorage agar tetap tersembunyi walau di-refresh
+
       const hiddenLogs = JSON.parse(localStorage.getItem("hidden_history_logs") || "[]");
       hiddenLogs.push(batchId);
       localStorage.setItem("hidden_history_logs", JSON.stringify(hiddenLogs));
@@ -107,17 +103,14 @@ export default function HistoryPage() {
   const clearAllLocally = () => {
     if (historyGroups.length === 0) return;
     if (confirm("Bersihkan semua Riwayat dari tampilan? (Data asli di database tetap aman)")) {
-      // Generate ID baru agar riwayat lama 'tersembunyi' secara permanen
       const newSessionId = "ssn_" + Math.random().toString(36).substring(2, 12);
       localStorage.setItem("chat_session_id", newSessionId);
-      
-      // Bersihkan juga memori hide individual
+
       localStorage.removeItem("hidden_history_logs");
-      
-      // Kosongkan tampilan
+
       setHistoryGroups([]);
       setExpandedBatchId(null);
-      
+
       alert("Semua riwayat berhasil dihilangkan dari layar Anda.");
     }
   };
@@ -142,11 +135,9 @@ export default function HistoryPage() {
             <h2 className="text-2xl md:text-3xl font-black premium-text-blue notranslate uppercase tracking-tighter">
               Riwayat Deteksi
             </h2>
-
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            {/* Tombol Bersihkan Semua */}
             <button
               onClick={clearAllLocally}
               className="px-4 py-2 rounded-xl text-[10px] font-black tracking-widest text-red-500/60 hover:text-red-400 border border-red-500/20 hover:border-red-500/50 bg-red-500/5 transition-all mr-2"
@@ -185,7 +176,6 @@ export default function HistoryPage() {
                 const isExpanded = expandedBatchId === group.batch_id;
                 return (
                   <div key={group.batch_id} className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    {/* Group Header (Clickable Accordion) */}
                     <div
                       onClick={() => setExpandedBatchId(isExpanded ? null : group.batch_id)}
                       className={`flex items-center justify-between px-4 py-5 bg-slate-800/30 border border-slate-700/50 rounded-2xl cursor-pointer hover:bg-slate-800/50 transition-all group ${isExpanded ? "border-blue-500/30 bg-slate-800/60" : ""}`}
@@ -222,7 +212,6 @@ export default function HistoryPage() {
                       </div>
                     </div>
 
-                    {/* Chat Bubbles (Expanded Only) */}
                     {isExpanded && (
                       <div className="bg-slate-900/40 rounded-[2.5rem] border border-slate-700/50 p-6 md:p-8 space-y-4 shadow-2xl animate-in zoom-in-95 duration-300">
                         {group.items.slice().reverse().map((item, idx) => (
@@ -253,7 +242,6 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {/* Footer */}
         <footer className="mt-32 py-10 border-t border-slate-800/50 text-center">
           <p className="text-slate-600 text-[10px] font-bold tracking-[0.2em] uppercase opacity-60">
             &copy; {new Date().getFullYear()} CegahGrooming — AI Protection System
@@ -263,4 +251,3 @@ export default function HistoryPage() {
     </main>
   );
 }
-

@@ -10,7 +10,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
   const [messages, setMessages] = useState<string[]>(["", "", ""]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll ke bawah saat pesan bertambah
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -43,9 +42,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
   };
 
   const parseTextContent = (rawContent: string): string[] => {
-    // Pola sistem WA yang harus dibuang (case-insensitive)
     const WA_SYSTEM_PATTERNS: RegExp[] = [
-      // Panggilan suara & video
       /telepon suara tak terjawab/i,
       /telepon video tak terjawab/i,
       /ketuk untuk menelepon balik/i,
@@ -55,17 +52,14 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       /telepon suara\./i,
       /telepon video\./i,
       /tidak dijawab/i,
-      // Pesan enkripsi & keamanan
       /pesan dan panggilan.*terenkripsi/i,
       /messages.*end-to-end encrypted/i,
-      // Media omitted (English)
       /image omitted/i,
       /sticker omitted/i,
       /video omitted/i,
       /audio omitted/i,
       /document omitted/i,
       /gif omitted/i,
-      // Media omitted (Indonesian)
       /gambar tidak disertakan/i,
       /foto tidak disertakan/i,
       /video tidak disertakan/i,
@@ -79,11 +73,9 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       /\<Media tidak disertakan\>/i,
       /\<Media tidak ada\>/i,
       /tidak disertakan/i,
-      // Pesan dihapus
       /pesan ini dihapus/i,
       /this message was deleted/i,
       /you deleted this message/i,
-      // Perubahan grup
       /bergabung menggunakan tautan undangan/i,
       /menambahkan/i,
       /menghapus/i,
@@ -95,10 +87,8 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
       /changed the group/i,
       /added you/i,
       /left/i,
-      // Link
       /https?:\/\//i,
       /www\./i,
-      // Sistem lainnya
       /anda sekarang terhubung/i,
       /you're now connected/i,
       /tap to learn more/i,
@@ -107,43 +97,35 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
     return rawContent
       .split(/\n/)
       .map((line) => {
-        // Hapus BOM dan SEMUA karakter tak kasat mata WA (U+200E, U+200F, U+200B, U+FEFF, dll)
         let clean = line
           .replace(/[\u200E\u200F\u200B\u200C\u200D\uFEFF\u202A\u202B\u202C\u202D\u202E]/g, "")
           .trim();
         if (!clean) return "";
 
-        // Hapus timestamp WA berbagai format:
-        // [14/05/26, 12.00.00]  /  14/05/26, 12:00  /  5/26/2024, 12:00 AM
         clean = clean.replace(
           /^\[?\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}[,\s]+\d{1,2}[.:]\d{2}(?:[.:]\d{2})?(?:\s?[AP]M)?\]?\s*[-–]?\s*/i,
           ""
         );
 
-        // Cek sistem WA SEBELUM name stripping (untuk pesan sistem tanpa pengirim)
         const isSystemBeforeStrip = WA_SYSTEM_PATTERNS.some((pattern) =>
           pattern.test(clean)
         );
         if (isSystemBeforeStrip) return "";
 
-        // Hapus nama pengirim (format "Nama: pesan" atau "~ Nama: pesan")
         clean = clean.replace(/^~\s*/, "");
         if (clean.includes(": ")) clean = clean.split(": ").slice(1).join(": ");
 
-        // Cek sistem WA SESUDAH name stripping
         const isSystemMsg = WA_SYSTEM_PATTERNS.some((pattern) =>
           pattern.test(clean)
         );
         if (isSystemMsg) return "";
 
-        // Bersihkan tanda petik di awal/akhir dan koma
         clean = clean.trim();
         clean = clean.replace(/^["'`]+/, "");
         clean = clean.replace(/["'`]+$/, "");
         clean = clean.replace(/,\s*$/, "");
         clean = clean.trim();
 
-        // Buang baris yang terlalu pendek (≤ 2 karakter) — kemungkinan noise/emoji saja
         if (clean.length <= 2) return "";
 
         return clean;
@@ -171,7 +153,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const text = event.target?.result as string;
@@ -184,7 +166,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
     };
     reader.readAsText(file);
 
-    // Reset file input agar bisa upload file yang sama lagi
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -198,9 +179,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-6">
-      {/* Header Actions */}
       <div className="px-2 space-y-2">
-        {/* Row 1: main action buttons */}
         <div className="flex gap-2">
           <button
             onClick={handlePaste}
@@ -211,7 +190,7 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
             </svg>
             Tempel Chat
           </button>
-          
+
           <label className="flex items-center gap-2 px-4 py-2 bg-violet-500/10 border border-violet-500/20 rounded-xl text-violet-400 text-[10px] font-black tracking-widest hover:bg-violet-500/20 transition-all uppercase cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -227,7 +206,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
           </label>
         </div>
 
-        {/* Row 2: bersihkan + counter */}
         <div className="flex items-center justify-between">
           <button
             onClick={clearAll}
@@ -241,7 +219,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
         </div>
       </div>
 
-      {/* Chat Container */}
       <div
         ref={scrollRef}
         className="relative bg-slate-900/50 border border-slate-800 rounded-[2.5rem] p-6 h-[400px] overflow-y-auto space-y-4 scroll-smooth custom-scrollbar"
@@ -262,7 +239,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
                   target.style.height = `${target.scrollHeight}px`;
                 }}
               />
-              {/* Delete Button removed per user request */}
             </div>
           </div>
         ))}
@@ -278,7 +254,6 @@ export default function ChatInputBuilder({ onAnalyze, isLoading }: ChatInputBuil
         </button>
       </div>
 
-      {/* Analyze Button */}
       <div className="pt-4 space-y-4">
         {activeMessages < 1 && (
           <div className="flex flex-wrap items-center justify-center gap-1 text-amber-500/80 animate-pulse text-center">
