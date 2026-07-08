@@ -15,10 +15,10 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const groomingCount = items.filter((i) => i.status === "GROOMING").length;
   const warningCount = items.filter((i) => i.status === "WARNING").length;
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
-  const highestScore = total > 0 ? Math.max(...items.map((i) => i.score)) : 0;
+  const averageScore = total > 0 ? items.reduce((sum, i) => sum + i.score, 0) / total : 0;
   const latestItem = total > 0 ? items[total - 1] : null;
-  const displayValue = total > 0 ? highestScore * 100 : 0;
-  const displayLabel = "Skor Hybrid";
+  const displayValue = total > 0 ? averageScore * 100 : 0;
+  const displayLabel = "Skor Rata-rata";
 
   const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
   const currentStatus = loading
