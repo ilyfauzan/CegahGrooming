@@ -20,13 +20,11 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const displayValue = total > 0 ? averageScore * 100 : 0;
   const displayLabel = "Skor Rata-rata";
 
-  // Status berdasarkan rata-rata skor, tapi jika ada GROOMING terdeteksi minimal WARNING
-  const scoreStatus = averageScore >= 0.50 ? "GROOMING" : averageScore >= 0.35 ? "WARNING" : "NORMAL";
+  // Status lingkaran murni berdasarkan rata-rata skor
   const worstStatus: "GROOMING" | "WARNING" | "NORMAL" =
-    scoreStatus === "GROOMING" ? "GROOMING"
-    : scoreStatus === "WARNING" ? "WARNING"
-    : groomingCount > 0 ? "WARNING"   // rata2 NORMAL tapi ada chat GROOMING → tetap WARNING
-    : "NORMAL";
+    averageScore >= 0.50 ? "GROOMING" : averageScore >= 0.35 ? "WARNING" : "NORMAL";
+  // Apakah perlu tampilkan banner peringatan terpisah?
+  const showGroomingAlert = worstStatus === "NORMAL" && groomingCount > 0;
   const currentStatus = loading
     ? (latestItem?.status || "NORMAL")
     : worstStatus;
@@ -100,6 +98,16 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
           </div>
         </div>
       </div>
+
+      {/* Banner peringatan: muncul kalau rata2 NORMAL tapi ada chat grooming */}
+      {showGroomingAlert && !loading && (
+        <div className="flex items-start gap-3 px-4 py-3 rounded-2xl border border-red-500/40 bg-red-500/10">
+          <span className="text-red-400 text-base mt-0.5">⚠️</span>
+          <p className="text-xs text-red-300 leading-relaxed">
+            Rata-rata aman, tapi terdeteksi <span className="font-black text-red-400">{groomingCount} pesan grooming</span>. Harap periksa lebih lanjut.
+          </p>
+        </div>
+      )}
 
       <div className="p-5 rounded-3xl border border-slate-700 bg-slate-800/50 space-y-4"
         style={{ backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}
