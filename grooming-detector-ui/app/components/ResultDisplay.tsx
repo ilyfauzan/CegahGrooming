@@ -20,7 +20,13 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const displayValue = total > 0 ? averageScore * 100 : 0;
   const displayLabel = "Skor Rata-rata";
 
-  const worstStatus = groomingCount > 0 ? "GROOMING" : warningCount > 0 ? "WARNING" : "NORMAL";
+  // Status berdasarkan rata-rata skor, tapi jika ada GROOMING terdeteksi minimal WARNING
+  const scoreStatus = averageScore >= 0.50 ? "GROOMING" : averageScore >= 0.35 ? "WARNING" : "NORMAL";
+  const worstStatus: "GROOMING" | "WARNING" | "NORMAL" =
+    scoreStatus === "GROOMING" ? "GROOMING"
+    : scoreStatus === "WARNING" ? "WARNING"
+    : groomingCount > 0 ? "WARNING"   // rata2 NORMAL tapi ada chat GROOMING → tetap WARNING
+    : "NORMAL";
   const currentStatus = loading
     ? (latestItem?.status || "NORMAL")
     : worstStatus;
