@@ -117,7 +117,6 @@ export default function HistoryPage() {
 
   const getStatusColor = (status: string) => {
     if (status === "GROOMING") return "text-red-400 border-red-500/50 bg-red-500/10";
-    if (status === "WARNING") return "text-yellow-400 border-yellow-500/50 bg-yellow-500/10";
     return "text-blue-400 border-blue-500/30 bg-blue-500/10";
   };
 
@@ -145,7 +144,7 @@ export default function HistoryPage() {
               BERSIHKAN SEMUA
             </button>
 
-            {["ALL", "NORMAL", "WARNING", "GROOMING"].map((s) => (
+            {["ALL", "NORMAL", "GROOMING"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}
@@ -216,15 +215,15 @@ export default function HistoryPage() {
                       <div className="bg-slate-900/40 rounded-[2.5rem] border border-slate-700/50 p-6 md:p-8 space-y-4 shadow-2xl animate-in zoom-in-95 duration-300">
                         {group.items.slice().reverse().map((item, idx) => (
                           <div key={idx} className="flex flex-col items-start max-w-[90%]">
-                            <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
-                                item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100 shadow-lg shadow-yellow-900/10" :
+                            <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${
+                                item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
                                   "bg-slate-800/80 border border-slate-700/50 text-slate-300"
                               }`}>
                               {item.text_input}
 
                               <div className="mt-3 flex items-center gap-2">
-                                <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
-                                    item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
+                                <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${
+                                    item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
                                       "bg-slate-900 text-slate-500 border border-slate-700/30"
                                   }`}>
                                   {item.status} — {(item.score * 100).toFixed(1)}%
