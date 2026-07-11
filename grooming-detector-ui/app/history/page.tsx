@@ -218,6 +218,7 @@ export default function HistoryPage() {
                           <div key={idx} className="flex flex-col items-start max-w-[90%]">
                             <div className={`relative px-5 py-4 rounded-3xl text-sm leading-relaxed ${
                                 item.status === "GROOMING" ? "bg-red-500/10 border border-red-500/30 text-red-100 shadow-lg shadow-red-900/10" :
+                                item.status === "WARNING" ? "bg-yellow-500/10 border border-yellow-500/30 text-yellow-100 shadow-lg shadow-yellow-900/10" :
                                   "bg-slate-800/80 border border-slate-700/50 text-slate-300"
                               }`}>
                               {item.text_input}
@@ -225,6 +226,7 @@ export default function HistoryPage() {
                               <div className="mt-3 flex items-center gap-2">
                                 <span className={`text-[8px] font-black px-2 py-0.5 rounded-lg uppercase tracking-tighter ${
                                     item.status === "GROOMING" ? "bg-red-500/20 text-red-400" :
+                                    item.status === "WARNING" ? "bg-yellow-500/20 text-yellow-400" :
                                       "bg-slate-900 text-slate-500 border border-slate-700/30"
                                   }`}>
                                   {item.status} — {(item.score * 100).toFixed(1)}%
