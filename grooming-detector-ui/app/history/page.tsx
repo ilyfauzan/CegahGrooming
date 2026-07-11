@@ -117,6 +117,7 @@ export default function HistoryPage() {
 
   const getStatusColor = (status: string) => {
     if (status === "GROOMING") return "text-red-400 border-red-500/50 bg-red-500/10";
+    if (status === "WARNING") return "text-yellow-400 border-yellow-500/50 bg-yellow-500/10";
     return "text-blue-400 border-blue-500/30 bg-blue-500/10";
   };
 
@@ -144,7 +145,7 @@ export default function HistoryPage() {
               BERSIHKAN SEMUA
             </button>
 
-            {["ALL", "NORMAL", "GROOMING"].map((s) => (
+            {["ALL", "NORMAL", "WARNING", "GROOMING"].map((s) => (
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}

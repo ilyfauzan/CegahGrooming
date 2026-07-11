@@ -7,30 +7,30 @@ import { ChatBubbleItem } from "./ChatBubbleList";
 interface ResultSidebarProps {
   items: ChatBubbleItem[];
   loading?: boolean;
-  onFocusStatus?: (status: "GROOMING") => void;
+  onFocusStatus?: (status: "WARNING" | "GROOMING") => void;
 }
 
 export default function ResultSidebar({ items, loading = false, onFocusStatus }: ResultSidebarProps) {
   const total = items.length;
   const groomingCount = items.filter((i) => i.status === "GROOMING").length;
+  const warningCount = items.filter((i) => i.status === "WARNING").length;
   const normalCount = items.filter((i) => i.status === "NORMAL").length;
   const averageScore = total > 0 ? items.reduce((sum, i) => sum + i.score, 0) / total : 0;
   const latestItem = total > 0 ? items[total - 1] : null;
   const displayValue = total > 0 ? averageScore * 100 : 0;
   const displayLabel = "Skor Rata-rata";
 
-  // Status lingkaran murni berdasarkan rata-rata skor
-  const worstStatus: "GROOMING" | "NORMAL" =
-    averageScore >= 0.45 ? "GROOMING" : "NORMAL";
-  // Apakah perlu tampilkan banner peringatan terpisah?
+  const worstStatus: "GROOMING" | "WARNING" | "NORMAL" =
+    averageScore >= 0.50 ? "GROOMING" : averageScore >= 0.35 ? "WARNING" : "NORMAL";
   const showGroomingAlert = worstStatus === "NORMAL" && groomingCount > 0;
   const currentStatus = loading
-    ? (latestItem?.status === "GROOMING" ? "GROOMING" : "NORMAL")
+    ? (latestItem?.status ?? "NORMAL")
     : worstStatus;
 
   const colorMap = {
     GROOMING: { path: "#ef4444", text: "text-red-400", border: "border-red-500/50", label: "GROOMING TERDETEKSI" },
-    NORMAL: { path: "#60a5fa", text: "text-blue-400", border: "border-blue-500/30", label: "PERCAKAPAN AMAN" },
+    WARNING:  { path: "#f59e0b", text: "text-yellow-400", border: "border-yellow-500/50", label: "KEWASPADAAN AKTIF" },
+    NORMAL:   { path: "#60a5fa", text: "text-blue-400", border: "border-blue-500/30", label: "PERCAKAPAN AMAN" },
   };
   const config = colorMap[currentStatus];
 
@@ -123,6 +123,27 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
             <span className="text-sm font-bold text-blue-400">{normalCount}</span>
           </div>
 
+          <button
+            onClick={() => warningCount > 0 && onFocusStatus?.("WARNING")}
+            disabled={warningCount === 0 || loading}
+            type="button"
+            className={`w-full flex justify-between items-center py-1.5 px-0 bg-transparent border-none text-left transition-all duration-300 ${warningCount > 0 && !loading
+                ? "hover:text-yellow-300 cursor-pointer active:scale-[0.98] group/stat"
+                : "opacity-60 cursor-not-allowed"
+              }`}
+          >
+            <span className="text-xs text-yellow-400 flex items-center gap-1.5 group-hover/stat:translate-x-1 transition-transform duration-300">
+              <span className="w-2 h-2 rounded-full bg-yellow-500" /> Warning
+            </span>
+            <span className="text-sm font-bold text-yellow-400 relative inline-block">
+              {warningCount}
+              {warningCount > 0 && !loading && (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 absolute left-full ml-1.5 top-1/2 -translate-y-1/2 opacity-0 group-hover/stat:opacity-100 group-hover/stat:translate-x-0.5 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              )}
+            </span>
+          </button>
           <button
             onClick={() => groomingCount > 0 && onFocusStatus?.("GROOMING")}
             disabled={groomingCount === 0 || loading}

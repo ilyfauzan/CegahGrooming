@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 export interface ChatBubbleItem {
   text: string;
-  status: "NORMAL" | "GROOMING";
+  status: "NORMAL" | "WARNING" | "GROOMING";
   score: number;
   standalone_score: number;
   context_score: number;
@@ -87,6 +87,17 @@ export default function ChatBubbleList({
         labelBg: "bg-red-500/15",
         label: "GROOMING",
         emoji: "🔴",
+      };
+    }
+    if (status === "WARNING") {
+      return {
+        borderColor: "border-yellow-500/50",
+        bgColor: "bg-yellow-500/5",
+        dotColor: "bg-yellow-500",
+        labelColor: "text-yellow-400",
+        labelBg: "bg-yellow-500/15",
+        label: "WARNING",
+        emoji: "🟡",
       };
     }
     return {
