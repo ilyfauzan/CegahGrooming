@@ -21,7 +21,7 @@ export default function ResultSidebar({ items, loading = false, onFocusStatus }:
   const displayLabel = "Skor Rata-rata";
 
   const worstStatus: "GROOMING" | "WARNING" | "NORMAL" =
-    averageScore >= 0.47 ? "GROOMING" : averageScore >= 0.40 ? "WARNING" : "NORMAL";
+    averageScore >= 0.50 ? "GROOMING" : averageScore >= 0.35 ? "WARNING" : "NORMAL";
   const showGroomingAlert = worstStatus === "NORMAL" && groomingCount > 0;
   const currentStatus = loading
     ? (latestItem?.status ?? "NORMAL")
