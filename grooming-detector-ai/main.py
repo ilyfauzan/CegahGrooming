@@ -55,11 +55,10 @@ def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10)
         S_context = F.softmax(out_context.logits, dim=-1)[0][1].item()
 
     S_final = (0.5 * S_stand) + (0.5 * S_context)
-    final_prob_normal = 1.0 - S_final
-
-    if S_final >= 0.50:
+    # THRESHOLD OPTIMAL (dari grid search 2D pada validation set, F1-Macro = 0.8293)
+    if S_final >= 0.475:
         label = "GROOMING"
-    elif S_final >= 0.35:
+    elif S_final >= 0.40:
         label = "WARNING"
     else:
         label = "NORMAL"
