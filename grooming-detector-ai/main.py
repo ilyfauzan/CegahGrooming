@@ -34,7 +34,7 @@ class ChatInput(BaseModel):
     text: str
     session_id: str = "default_session"
 
-def detect_grooming_hybrid(translated_history: list[str], window_size: int = 10):
+def detect_grooming_hybrid(translated_history: list[str], window_size: int = 15):
     if not translated_history:
         return {'label': "NORMAL", 'conf_score': 0.0, 'prob_grooming': 0.0, 'prob_normal': 1.0}
 
@@ -102,8 +102,8 @@ async def predict(data: ChatInput):
 
     chat_history[session_id].append(translated_text)
 
-    if len(chat_history[session_id]) > 10:
-        chat_history[session_id] = chat_history[session_id][-10:]
+    if len(chat_history[session_id]) > 15:
+        chat_history[session_id] = chat_history[session_id][-15:]
 
     mode_label = "window" if len(chat_history[session_id]) > 1 else "single"
 
